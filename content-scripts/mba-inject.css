@@ -1,784 +1,1911 @@
-/* GAsTCA - Injected Styles (PrettyMerch-style injection into MBA page) */
+/* GAsTCA v3.0 - Complete PrettyMerch + Productor Clone Styles */
+/* Light theme, injected into MBA page */
 
-/* ==================== GASTCA WRAPPER (injected inside MBA) ==================== */
+/* ==================== RESET & WRAPPER ==================== */
 #gastca-wrapper {
   position: relative;
-  padding: 20px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  color: #333;
+  line-height: 1.5;
+  padding: 0;
 }
 
 #gastca-wrapper * {
   box-sizing: border-box;
 }
 
-/* ==================== HEADER ROW ==================== */
-#gastca-wrapper .ga-header {
+#gastca-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 15px;
+}
+
+/* ==================== NAV TAB STYLING ==================== */
+.nav-tabs .ga-nav-item {
+  margin-left: 0;
+}
+
+.nav-tabs .nav-link.ga-tab-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-tabs .nav-link.ga-tab-link:hover {
+  color: #F5A623;
+  border-bottom-color: rgba(245, 166, 35, 0.3);
+}
+
+.nav-tabs .nav-link.ga-tab-link.active {
+  color: #F5A623;
+  border-bottom-color: #F5A623;
+  font-weight: 600;
+}
+
+.ga-tab-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.ga-icon-dashboard::before { content: '📊'; }
+.ga-icon-analytics::before { content: '📈'; }
+.ga-icon-products::before { content: '📦'; }
+.ga-icon-research::before { content: '🔍'; }
+.ga-icon-designs::before { content: '🎨'; }
+.ga-icon-statistics::before { content: '📉'; }
+.ga-icon-winners::before { content: '🏆'; }
+
+/* ==================== HEADER BAR ==================== */
+.ga-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  padding: 12px 20px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
-#gastca-wrapper .ga-header-left {
+.ga-header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
 }
 
-#gastca-wrapper .ga-logo {
-  height: 40px;
-}
-
-#gastca-wrapper .ga-logo-text {
-  font-size: 22px;
-  font-weight: 700;
-  color: #F5A623;
-  letter-spacing: 1px;
-}
-
-#gastca-wrapper .ga-header-right {
+.ga-brand {
   display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Marketplace Flags */
-#gastca-wrapper .ga-flag-container {
-  display: flex;
+  align-items: baseline;
   gap: 6px;
+}
+
+.ga-brand-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #F5A623;
+  letter-spacing: 0.5px;
+}
+
+.ga-brand-version {
+  font-size: 11px;
+  color: #bbb;
+  font-weight: 400;
+}
+
+.ga-tier-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #FFF8E7, #FFF0CC);
+  border: 1px solid #F5D78E;
+  border-radius: 20px;
+}
+
+.ga-tier-number {
+  font-size: 16px;
+  font-weight: 800;
+  color: #F5A623;
+}
+
+.ga-tier-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #C88B1A;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ga-header-center {
+  display: flex;
   align-items: center;
 }
 
-#gastca-wrapper .ga-flag {
-  width: 32px;
-  height: 32px;
+.ga-marketplace-flags {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ga-mp-flag {
+  position: relative;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 2px solid #e0e0e0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   cursor: pointer;
-  position: relative;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   background: #fff;
 }
 
-#gastca-wrapper .ga-flag:hover {
+.ga-mp-flag:hover {
   border-color: #F5A623;
   transform: scale(1.1);
 }
 
-#gastca-wrapper .ga-flag.active {
-  border-color: #F5A623;
-  box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.2);
-}
-
-#gastca-wrapper .ga-flag.has-sales {
+.ga-mp-flag.has-sales {
   border-color: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.15);
 }
 
-#gastca-wrapper .ga-flag .ga-sales-number {
+.ga-mp-emoji {
+  font-size: 18px;
+}
+
+.ga-mp-count {
   position: absolute;
-  bottom: -6px;
+  bottom: -5px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  color: #333;
+  color: #666;
   background: #fff;
-  padding: 0 3px;
-  border-radius: 3px;
   border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0 4px;
   line-height: 14px;
-}
-
-#gastca-wrapper .ga-flag .ga-sales-number.has-sales {
-  color: #28a745;
-  border-color: #28a745;
-}
-
-/* Header Stats (Tier, REJ, UR, PS) */
-#gastca-wrapper .ga-header-stats {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  margin-left: 20px;
-}
-
-#gastca-wrapper .ga-header-stat {
+  min-width: 16px;
   text-align: center;
 }
 
-#gastca-wrapper .ga-header-stat .number {
-  font-size: 16px;
+.ga-mp-flag.has-sales .ga-mp-count {
+  color: #28a745;
+  border-color: #28a745;
+  background: #e8f5e9;
+}
+
+.ga-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ga-header-stat-group {
+  display: flex;
+  gap: 14px;
+}
+
+.ga-mini-stat {
+  text-align: center;
+}
+
+.ga-mini-val {
+  display: block;
+  font-size: 14px;
   font-weight: 700;
   color: #333;
 }
 
-#gastca-wrapper .ga-header-stat .title {
-  font-size: 10px;
+.ga-mini-label {
+  display: block;
+  font-size: 9px;
   color: #999;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-#gastca-wrapper .ga-tier {
+.ga-header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ga-btn-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-right: 15px;
-}
-
-#gastca-wrapper .ga-tier .number {
-  font-size: 18px;
-  font-weight: 800;
-  color: #F5A623;
-}
-
-#gastca-wrapper .ga-tier .title {
-  font-size: 10px;
-  color: #999;
-  text-transform: uppercase;
-}
-
-/* ==================== NAV TABS (injected into MBA nav) ==================== */
-.nav-tabs .nav-item .nav-link.ga-tab-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #555;
-  font-weight: 500;
-  border: none;
-  padding: 10px 16px;
+  justify-content: center;
   transition: all 0.2s;
 }
 
-.nav-tabs .nav-item .nav-link.ga-tab-link:hover {
-  color: #F5A623;
+.ga-btn-icon:hover {
+  border-color: #F5A623;
+  background: #FFF8E7;
 }
 
-.nav-tabs .nav-item .nav-link.ga-tab-link.active {
-  color: #F5A623;
-  border-bottom: 2px solid #F5A623;
-  background: none;
-}
-
-.nav-tabs .nav-item .nav-link.ga-tab-link img {
-  width: 15px;
-  height: 15px;
-}
-
-/* ==================== TOP STATS ROW ==================== */
-#gastca-wrapper .ga-top-stats {
+/* ==================== PROGRESS BARS ROW ==================== */
+.ga-progress-row {
   display: flex;
-  gap: 0;
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
-#gastca-wrapper .ga-top-stat {
+.ga-progress-item {
   flex: 1;
-  padding: 14px 18px;
-  border-right: 1px solid #eee;
+  padding: 14px 16px;
+  border-right: 1px solid #f0f0f0;
 }
 
-#gastca-wrapper .ga-top-stat:last-child {
+.ga-progress-item:last-child {
   border-right: none;
 }
 
-#gastca-wrapper .ga-top-stat .title {
-  font-size: 12px;
+.ga-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ga-progress-title {
+  font-size: 11px;
   color: #888;
-  margin-bottom: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-#gastca-wrapper .ga-top-stat .progress-text {
-  font-size: 13px;
-  color: #333;
-  margin-bottom: 6px;
-}
-
-#gastca-wrapper .ga-top-stat .progress-text .used {
-  font-weight: 700;
-}
-
-#gastca-wrapper .ga-top-stat .progress-percent {
-  color: #999;
+.ga-progress-numbers {
   font-size: 12px;
-  margin-left: 4px;
+  color: #555;
 }
 
-#gastca-wrapper .ga-top-stat .progress {
+.ga-progress-numbers strong {
+  color: #333;
+}
+
+.ga-progress-pct {
+  color: #aaa;
+  font-size: 11px;
+  margin-left: 3px;
+}
+
+.ga-progress-bar-wrap {
   height: 6px;
+  background: #f0f0f0;
   border-radius: 3px;
-  background: #eee;
   overflow: hidden;
 }
 
-#gastca-wrapper .ga-top-stat .progress-bar {
+.ga-progress-bar {
   height: 100%;
   border-radius: 3px;
-  transition: width 0.5s ease;
+  transition: width 0.6s ease;
 }
 
-/* ==================== DASHBOARD LAYOUT ==================== */
-#gastca-wrapper .ga-dash-row {
+.ga-bar-cyan { background: #4BC0C0; }
+.ga-bar-yellow { background: #FFCE56; }
+.ga-bar-green { background: #28a745; }
+.ga-bar-orange { background: #F5A623; }
+.ga-bar-blue { background: #36A2EB; }
+
+.ga-progress-reviews {
   display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
-/* Today's Sales Card */
-#gastca-wrapper .ga-today-card {
-  width: 320px;
-  min-width: 320px;
+.ga-reviews-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+
+.ga-stars {
+  color: #FFD700;
+  font-size: 14px;
+}
+
+.ga-review-text {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ==================== PAGE VISIBILITY ==================== */
+.ga-page {
+  display: none;
+}
+
+.ga-page.active {
+  display: block;
+  animation: gaFadeIn 0.2s ease;
+}
+
+@keyframes gaFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== DASHBOARD PAGE ==================== */
+.ga-dash-main {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Today Panel */
+.ga-today-panel {
+  width: 300px;
+  min-width: 300px;
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 8px;
-  padding: 20px;
+  padding: 24px 20px;
   text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
-#gastca-wrapper .ga-today-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
+.ga-today-header {
+  margin-bottom: 8px;
 }
 
-#gastca-wrapper .ga-today-subtitle {
-  font-size: 12px;
-  color: #999;
-  margin-bottom: 12px;
-}
-
-#gastca-wrapper .ga-today-number {
-  font-size: 64px;
-  font-weight: 800;
-  color: #F5A623;
-  line-height: 1;
-  margin: 16px 0;
-}
-
-#gastca-wrapper .ga-today-stats {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
-}
-
-#gastca-wrapper .ga-today-stat {
-  text-align: center;
-}
-
-#gastca-wrapper .ga-today-stat .value {
+.ga-today-label {
+  display: block;
   font-size: 15px;
   font-weight: 600;
   color: #333;
 }
 
-#gastca-wrapper .ga-today-stat .label {
-  font-size: 11px;
-  color: #999;
+.ga-today-date {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 2px;
 }
 
-/* Chart Card */
-#gastca-wrapper .ga-chart-card {
+.ga-today-counter {
+  margin: 20px 0;
+}
+
+.ga-odometer {
+  font-size: 72px;
+  font-weight: 900;
+  color: #F5A623;
+  line-height: 1;
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.ga-odo-pulse {
+  animation: gaPulse 0.6s ease;
+}
+
+@keyframes gaPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.ga-today-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 16px;
+}
+
+.ga-today-detail {
+  text-align: center;
+}
+
+.ga-td-value {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.ga-td-label {
+  display: block;
+  font-size: 10px;
+  color: #999;
+  margin-top: 2px;
+}
+
+/* Chart Panel */
+.ga-chart-panel {
   flex: 1;
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 8px;
-  padding: 15px;
-  position: relative;
-  min-height: 280px;
-}
-
-#gastca-wrapper .ga-chart-card canvas {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* ==================== PERIOD CARDS ==================== */
-#gastca-wrapper .ga-periods-row {
-  display: flex;
-  gap: 0;
-  margin-bottom: 20px;
-}
-
-#gastca-wrapper .ga-periods-left {
-  width: 50%;
-  padding-right: 10px;
-}
-
-#gastca-wrapper .ga-periods-right {
-  width: 50%;
-  padding-left: 10px;
-}
-
-#gastca-wrapper .ga-periods-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-#gastca-wrapper .ga-period-card {
   padding: 16px;
-  border-bottom: 1px solid #eee;
-  border-right: 1px solid #eee;
-}
-
-#gastca-wrapper .ga-period-card:nth-child(even) {
-  border-right: none;
-}
-
-#gastca-wrapper .ga-period-card:nth-last-child(-n+2) {
-  border-bottom: none;
-}
-
-#gastca-wrapper .ga-period-card.full-width {
-  grid-column: 1 / -1;
-  border-right: none;
-}
-
-#gastca-wrapper .ga-period-header {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
+  flex-direction: column;
 }
 
-#gastca-wrapper .ga-period-title {
+.ga-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ga-chart-title {
   font-size: 13px;
   font-weight: 600;
   color: #555;
 }
 
-#gastca-wrapper .ga-period-date {
+.ga-chart-legend {
+  display: flex;
+  gap: 12px;
+}
+
+.ga-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
-  color: #aaa;
+  color: #888;
 }
 
-#gastca-wrapper .ga-period-value {
-  font-size: 28px;
-  font-weight: 800;
-  color: #333;
-  margin-bottom: 4px;
+.ga-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
-#gastca-wrapper .ga-period-royalty {
-  font-size: 13px;
-  font-weight: 600;
-  color: #28a745;
-  margin-bottom: 4px;
+.ga-dot-orange { background: #F5A623; }
+.ga-dot-green { background: #28a745; }
+.ga-dot-blue { background: #36A2EB; }
+
+.ga-chart-container {
+  flex: 1;
+  min-height: 220px;
+  position: relative;
 }
 
-#gastca-wrapper .ga-period-meta {
-  font-size: 11px;
-  color: #aaa;
+.ga-chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
-#gastca-wrapper .ga-period-ad {
-  font-size: 11px;
-  color: #aaa;
-  margin-top: 2px;
+/* ==================== DASHBOARD BOTTOM ROW ==================== */
+.ga-dash-bottom {
+  display: flex;
+  gap: 16px;
 }
 
-#gastca-wrapper .ga-period-ad .ad-label {
-  font-weight: 600;
-  color: #bbb;
-  margin-right: 3px;
+.ga-dash-left {
+  flex: 1;
 }
 
-/* ==================== TODAY'S SALES LIST ==================== */
-#gastca-wrapper .ga-sales-panel {
+.ga-dash-right {
+  flex: 1;
+}
+
+/* Sales List Panel */
+.ga-sales-list-panel {
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  min-height: 350px;
 }
 
-#gastca-wrapper .ga-panel-tabs {
+.ga-slist-tabs {
   display: flex;
-  border-bottom: 1px solid #eee;
-  padding: 0 16px;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 12px;
 }
 
-#gastca-wrapper .ga-panel-tab {
-  padding: 12px 16px;
-  font-size: 13px;
+.ga-slist-tab {
+  padding: 12px 14px;
+  font-size: 12px;
   font-weight: 500;
   color: #888;
-  cursor: pointer;
+  background: none;
+  border: none;
   border-bottom: 2px solid transparent;
+  cursor: pointer;
   transition: all 0.2s;
 }
 
-#gastca-wrapper .ga-panel-tab:hover {
-  color: #333;
+.ga-slist-tab:hover {
+  color: #555;
 }
 
-#gastca-wrapper .ga-panel-tab.active {
+.ga-slist-tab.active {
   color: #28a745;
   border-bottom-color: #28a745;
   font-weight: 600;
 }
 
-#gastca-wrapper .ga-panel-body {
+.ga-slist-content {
   padding: 16px;
-  min-height: 300px;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#gastca-wrapper .ga-no-sales {
+.ga-no-sales-state {
   text-align: center;
-  padding: 40px 20px;
+  padding: 30px 20px;
 }
 
-#gastca-wrapper .ga-no-sales .title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 6px;
+.ga-fishing-img {
+  font-size: 48px;
+  margin-bottom: 12px;
 }
 
-#gastca-wrapper .ga-no-sales .text {
-  font-size: 14px;
-  color: #888;
+.ga-no-sales-state h3 {
+  font-size: 16px;
+  color: #555;
+  margin: 0 0 6px;
 }
 
-/* ==================== PRODUCTS TABLE ==================== */
-#gastca-wrapper .ga-products-container {
+.ga-no-sales-state p {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+/* Periods Grid */
+.ga-periods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   background: #fff;
   border: 1px solid #e8e8e8;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
-#gastca-wrapper .ga-products-header {
+.ga-period-card {
+  padding: 16px;
+  border-bottom: 1px solid #f5f5f5;
+  border-right: 1px solid #f5f5f5;
+  transition: background 0.2s;
+}
+
+.ga-period-card:hover {
+  background: #fafafa;
+}
+
+.ga-period-card:nth-child(even) {
+  border-right: none;
+}
+
+.ga-period-card:nth-last-child(-n+2):not(.full-width) {
+  border-bottom: none;
+}
+
+.ga-period-card.full-width {
+  grid-column: 1 / -1;
+  border-right: none;
+  border-bottom: none;
+  background: #fafbfc;
+}
+
+.ga-pc-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
-#gastca-wrapper .ga-products-title {
-  font-size: 16px;
+.ga-pc-title {
+  font-size: 12px;
   font-weight: 600;
+  color: #555;
+}
+
+.ga-pc-date {
+  font-size: 10px;
+  color: #bbb;
+}
+
+.ga-pc-sales {
+  font-size: 28px;
+  font-weight: 800;
   color: #333;
+  line-height: 1.2;
 }
 
-#gastca-wrapper .ga-search-input {
-  padding: 8px 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+.ga-pc-royalty {
   font-size: 13px;
-  width: 280px;
-  outline: none;
-  transition: border-color 0.2s;
+  font-weight: 600;
+  color: #28a745;
+  margin: 2px 0;
 }
 
-#gastca-wrapper .ga-search-input:focus {
-  border-color: #F5A623;
+.ga-pc-meta {
+  font-size: 11px;
+  color: #aaa;
 }
 
-#gastca-wrapper .ga-table {
-  width: 100%;
-  border-collapse: collapse;
+.ga-pc-ads {
+  font-size: 11px;
+  color: #bbb;
+  margin-top: 3px;
 }
 
-#gastca-wrapper .ga-table th {
-  text-align: left;
-  padding: 10px 14px;
+.ga-ads-label {
+  font-weight: 700;
+  color: #ccc;
+}
+
+/* ==================== ANALYTICS PAGE ==================== */
+.ga-analytics-controls {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-control-label {
   font-size: 11px;
   font-weight: 600;
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  border-bottom: 1px solid #eee;
-  background: #fafafa;
+  margin-right: 10px;
 }
 
-#gastca-wrapper .ga-table td {
-  padding: 10px 14px;
+.ga-date-range-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ga-date-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ga-pill {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #666;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-pill:hover {
+  background: #FFF8E7;
+  border-color: #F5A623;
+  color: #F5A623;
+}
+
+.ga-pill.active {
+  background: #F5A623;
+  border-color: #F5A623;
+  color: #fff;
+}
+
+.ga-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ga-mp-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ga-mp-checkboxes {
+  display: flex;
+  gap: 10px;
+}
+
+.ga-mp-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #555;
+  cursor: pointer;
+}
+
+.ga-mp-check input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: #F5A623;
+}
+
+/* Analytics Chart Panel */
+.ga-analytics-chart-panel {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-achart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ga-achart-toggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ga-toggle-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-toggle-btn:first-child {
+  border-right: 1px solid #e0e0e0;
+}
+
+.ga-toggle-btn.active {
+  background: #F5A623;
+  color: #fff;
+}
+
+.ga-achart-info {
   font-size: 13px;
+  color: #666;
+}
+
+.ga-achart-total strong {
+  color: #333;
+}
+
+.ga-achart-container {
+  min-height: 250px;
+  position: relative;
+}
+
+.ga-achart-container canvas {
+  width: 100% !important;
+  height: 250px !important;
+}
+
+/* Analytics Summary */
+.ga-analytics-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ga-asummary-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-asummary-card h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 12px;
+}
+
+.ga-as-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ga-as-item {
+  text-align: center;
+}
+
+.ga-as-val {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.ga-as-label {
+  display: block;
+  font-size: 10px;
+  color: #999;
+  margin-top: 2px;
+}
+
+/* Analytics Performance */
+.ga-analytics-performance {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-aperf-header {
+  margin-bottom: 16px;
+}
+
+.ga-aperf-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px;
+}
+
+.ga-aperf-subtitle {
+  font-size: 12px;
+  color: #999;
+}
+
+.ga-aperf-chart {
+  margin-bottom: 16px;
+}
+
+.ga-aperf-bar {
+  display: flex;
+  height: 28px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ga-aperf-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.ga-aperf-top {
+  background: #F5A623;
+}
+
+.ga-aperf-rest {
+  background: #ddd;
+  color: #666;
+}
+
+/* ==================== PRODUCTS PAGE ==================== */
+.ga-products-toolbar {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-ptool-left {
+  margin-bottom: 12px;
+}
+
+.ga-ptool-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.ga-ptool-right {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ga-search-input {
+  padding: 8px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.ga-search-input:focus {
+  border-color: #F5A623;
+  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.1);
+}
+
+.ga-search-lg {
+  padding: 10px 16px;
+  font-size: 14px;
+}
+
+.ga-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ga-filter-group label {
+  font-size: 11px;
+  color: #888;
+  font-weight: 500;
+}
+
+.ga-flag-filters {
+  display: flex;
+  gap: 4px;
+}
+
+.ga-flag-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.ga-flag-btn:hover {
+  border-color: #F5A623;
+}
+
+.ga-flag-btn.active {
+  border-color: #F5A623;
+  background: #FFF8E7;
+}
+
+.ga-select {
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #555;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+}
+
+.ga-select:focus {
+  border-color: #F5A623;
+}
+
+/* Buttons */
+.ga-btn {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ga-btn-primary {
+  background: #F5A623;
+  color: #fff;
+}
+
+.ga-btn-primary:hover {
+  background: #E09100;
+}
+
+.ga-btn-outline {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  color: #555;
+}
+
+.ga-btn-outline:hover {
+  border-color: #F5A623;
+  color: #F5A623;
+}
+
+.ga-btn-sm {
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+.ga-btn-danger {
+  background: #dc3545;
+  color: #fff;
+}
+
+/* Batch Bar */
+.ga-batch-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #FFF8E7;
+  border: 1px solid #F5D78E;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.ga-batch-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #F5A623;
+}
+
+/* Products Table */
+.ga-products-table-wrap {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+
+.ga-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.ga-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fafbfc;
+  white-space: nowrap;
+}
+
+.ga-table td {
+  padding: 10px 12px;
   border-bottom: 1px solid #f5f5f5;
   color: #333;
   vertical-align: middle;
 }
 
-#gastca-wrapper .ga-table tr:hover td {
-  background: #f9f9f9;
+.ga-table tr:hover td {
+  background: #f9fafb;
 }
 
-#gastca-wrapper .ga-table .product-img {
+.ga-table-empty {
+  text-align: center;
+  padding: 40px 20px !important;
+  color: #999;
+}
+
+.ga-th-check { width: 36px; }
+.ga-th-img { width: 50px; }
+.ga-th-title { min-width: 200px; }
+.ga-th-type { width: 100px; }
+.ga-th-status { width: 80px; }
+.ga-th-date { width: 80px; }
+.ga-th-price { width: 60px; }
+.ga-th-num { width: 60px; text-align: right; }
+.ga-th-actions { width: 70px; }
+.ga-th-rank { width: 40px; }
+.ga-th-mp { width: 40px; }
+.ga-th-total { width: 60px; font-weight: 700; }
+
+.ga-td-num { text-align: right; }
+.ga-td-rank { font-weight: 700; color: #F5A623; text-align: center; }
+.ga-td-mp { text-align: center; font-size: 16px; }
+.ga-td-total { font-weight: 700; text-align: center; }
+.ga-td-month { text-align: center; }
+.ga-td-month.has-value { color: #28a745; font-weight: 600; }
+
+.ga-prod-thumb {
   width: 40px;
   height: 40px;
   border-radius: 6px;
   object-fit: cover;
-  background: #eee;
+  background: #f5f5f5;
 }
 
-#gastca-wrapper .ga-table .product-title a {
+.ga-prod-thumb-empty {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #f0f0f0;
+}
+
+.ga-prod-title-link {
   color: #0066c0;
   text-decoration: none;
   font-weight: 500;
+  font-size: 12px;
 }
 
-#gastca-wrapper .ga-table .product-title a:hover {
-  text-decoration: underline;
+.ga-prod-title-link:hover {
   color: #c45500;
+  text-decoration: underline;
 }
 
-#gastca-wrapper .ga-table .product-brand {
-  font-size: 11px;
-  color: #999;
-  margin-top: 2px;
+.ga-prod-meta {
+  margin-top: 3px;
+  display: flex;
+  gap: 8px;
 }
 
-#gastca-wrapper .ga-table .product-asin {
-  font-size: 11px;
+.ga-prod-brand {
+  font-size: 10px;
+  color: #888;
+}
+
+.ga-prod-asin {
+  font-size: 10px;
   color: #bbb;
-  font-family: monospace;
+  font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
-#gastca-wrapper .ga-badge {
+.ga-type-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.ga-status-badge {
   display: inline-block;
   padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-#gastca-wrapper .ga-badge-live {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-#gastca-wrapper .ga-badge-auto {
-  background: #e3f2fd;
-  color: #1565c0;
-}
-
-#gastca-wrapper .ga-badge-review {
-  background: #fff3e0;
-  color: #e65100;
-}
-
-#gastca-wrapper .ga-badge-rejected {
-  background: #fbe9e7;
-  color: #c62828;
-}
-
-#gastca-wrapper .ga-badge-timed-out {
-  background: #f3e5f5;
-  color: #6a1b9a;
-}
-
-#gastca-wrapper .ga-has-sales {
-  color: #28a745;
-  font-weight: 600;
-}
-
-#gastca-wrapper .ga-bsr-badge {
-  display: inline-block;
-  padding: 3px 8px;
-  background: #e3f2fd;
-  color: #1565c0;
   border-radius: 12px;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-/* ==================== STATS PAGE ==================== */
-#gastca-wrapper .ga-stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-#gastca-wrapper .ga-stat-card {
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-#gastca-wrapper .ga-stat-card h3 {
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 600;
-  color: #555;
-  margin-bottom: 16px;
 }
 
-#gastca-wrapper .ga-stat-card canvas {
-  width: 100% !important;
-  height: 200px !important;
-}
+.ga-status-live { background: #e8f5e9; color: #2e7d32; }
+.ga-status-under-review { background: #fff3e0; color: #e65100; }
+.ga-status-rejected { background: #fbe9e7; color: #c62828; }
+.ga-status-removed { background: #f3e5f5; color: #6a1b9a; }
+.ga-status-draft { background: #e3f2fd; color: #1565c0; }
+.ga-status-pending-removal { background: #fce4ec; color: #880e4f; }
 
-/* ==================== WINNERS ==================== */
-#gastca-wrapper .ga-winners-list {
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-#gastca-wrapper .ga-winner-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 18px;
-  border-bottom: 1px solid #f5f5f5;
+.ga-action-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 4px;
   transition: background 0.2s;
 }
 
-#gastca-wrapper .ga-winner-item:hover {
-  background: #f9f9f9;
+.ga-action-btn:hover {
+  background: #f0f0f0;
 }
 
-#gastca-wrapper .ga-winner-item:last-child {
-  border-bottom: none;
-}
-
-#gastca-wrapper .ga-winner-rank {
-  font-size: 18px;
-  font-weight: 800;
-  color: #F5A623;
-  min-width: 30px;
-}
-
-#gastca-wrapper .ga-winner-img {
-  width: 45px;
-  height: 45px;
-  border-radius: 6px;
-  object-fit: cover;
-  background: #eee;
-}
-
-#gastca-wrapper .ga-winner-info {
-  flex: 1;
-}
-
-#gastca-wrapper .ga-winner-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: #333;
-}
-
-#gastca-wrapper .ga-winner-meta {
-  font-size: 11px;
-  color: #999;
-  margin-top: 2px;
-}
-
-#gastca-wrapper .ga-winner-sales {
-  font-size: 16px;
-  font-weight: 700;
-  color: #28a745;
-}
-
-/* ==================== HIDDEN PAGE SECTIONS ==================== */
-#gastca-wrapper .ga-page {
-  display: none;
-}
-
-#gastca-wrapper .ga-page.active {
-  display: block;
-}
-
-/* ==================== EMPTY STATE ==================== */
-#gastca-wrapper .ga-empty {
-  text-align: center;
-  padding: 50px 20px;
-  color: #888;
-}
-
-#gastca-wrapper .ga-empty-icon {
-  font-size: 40px;
-  display: block;
-  margin-bottom: 10px;
-}
-
-#gastca-wrapper .ga-empty h3 {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 6px;
-}
-
-#gastca-wrapper .ga-empty p {
-  font-size: 13px;
-  color: #999;
-}
-
-/* ==================== FOOTER ==================== */
-#gastca-wrapper .ga-footer {
+/* Pagination */
+.ga-pagination {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
-  margin-top: 20px;
-  border-top: 1px solid #eee;
-  font-size: 12px;
-  color: #999;
+  padding: 12px 20px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-top: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
-#gastca-wrapper .ga-footer a {
-  color: #F5A623;
-  text-decoration: none;
-}
-
-/* ==================== PAGINATION ==================== */
-#gastca-wrapper .ga-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 18px;
-  border-top: 1px solid #eee;
-}
-
-#gastca-wrapper .ga-pagination-info {
+.ga-pag-info {
   font-size: 12px;
   color: #888;
 }
 
-#gastca-wrapper .ga-pagination-controls {
+.ga-pag-controls {
   display: flex;
+  align-items: center;
   gap: 6px;
 }
 
-#gastca-wrapper .ga-pagination-btn {
+.ga-pag-btn {
   padding: 6px 12px;
-  border: 1px solid #ddd;
+  font-size: 12px;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
   background: #fff;
-  font-size: 12px;
+  color: #555;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-#gastca-wrapper .ga-pagination-btn:hover {
+.ga-pag-btn:hover:not(.disabled) {
   border-color: #F5A623;
   color: #F5A623;
 }
 
-#gastca-wrapper .ga-pagination-btn.disabled {
+.ga-pag-btn.disabled {
   opacity: 0.4;
   cursor: default;
 }
 
-/* ==================== HIDE ORIGINAL DASHBOARD ==================== */
+.ga-pag-pages {
+  display: flex;
+  gap: 4px;
+}
+
+.ga-pag-num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-pag-num.active {
+  background: #F5A623;
+  border-color: #F5A623;
+  color: #fff;
+}
+
+.ga-pag-size {
+  margin-left: 8px;
+}
+
+/* ==================== RESEARCH PAGE ==================== */
+.ga-sub-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 0;
+}
+
+.ga-sub-tab {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-sub-tab:hover {
+  color: #555;
+}
+
+.ga-sub-tab.active {
+  color: #F5A623;
+  border-bottom-color: #F5A623;
+  font-weight: 600;
+}
+
+.ga-research-panel {
+  display: none;
+}
+
+.ga-research-panel.active {
+  display: block;
+}
+
+.ga-trend-controls {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-trend-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ga-trend-row:last-child {
+  margin-bottom: 0;
+}
+
+.ga-trend-match {
+  display: flex;
+  gap: 4px;
+}
+
+.ga-trend-filters {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.ga-trend-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ga-view-toggle {
+  display: flex;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ga-view-btn {
+  padding: 6px 10px;
+  font-size: 14px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-view-btn:first-child {
+  border-right: 1px solid #e0e0e0;
+}
+
+.ga-view-btn.active {
+  background: #F5A623;
+  color: #fff;
+}
+
+.ga-bsr-range {
+  flex: 1;
+}
+
+.ga-bsr-range label {
+  display: block;
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.ga-range {
+  width: 48%;
+  margin-right: 2%;
+  accent-color: #F5A623;
+}
+
+/* Trend Results Grid */
+.ga-trend-results {
+  min-height: 300px;
+}
+
+.ga-trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* Trademark */
+.ga-tm-controls {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-tm-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ga-tm-results, .ga-kw-results {
+  min-height: 200px;
+}
+
+.ga-kw-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+/* ==================== DESIGNS PAGE ==================== */
+.ga-designs-stats {
+  display: flex;
+  gap: 0;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-dstat {
+  flex: 1;
+  text-align: center;
+  padding: 16px;
+  border-right: 1px solid #f0f0f0;
+}
+
+.ga-dstat:last-child {
+  border-right: none;
+}
+
+.ga-dstat-num {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+.ga-dstat-label {
+  display: block;
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.ga-text-green { color: #28a745 !important; }
+.ga-text-orange { color: #F5A623 !important; }
+.ga-text-red { color: #dc3545 !important; }
+
+.ga-designs-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ga-designs-controls .ga-search-input {
+  max-width: 300px;
+}
+
+.ga-designs-view-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.ga-designs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.ga-design-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-design-card:hover {
+  border-color: #F5A623;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.ga-design-img-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  background: #f9f9f9;
+  overflow: hidden;
+}
+
+.ga-design-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ga-design-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #ddd;
+}
+
+.ga-design-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.ga-design-card:hover .ga-design-overlay {
+  opacity: 1;
+}
+
+.ga-design-info {
+  padding: 10px 12px;
+}
+
+.ga-design-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+
+.ga-design-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ga-design-mp {
+  font-size: 10px;
+  color: #999;
+}
+
+/* ==================== STATISTICS PAGE ==================== */
+.ga-stats-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ga-stats-period {
+  display: flex;
+  gap: 4px;
+}
+
+.ga-stats-mp-filter {
+  display: flex;
+  gap: 6px;
+}
+
+.ga-stats-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ga-stats-chart-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-stats-chart-card h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  margin: 0 0 12px;
+}
+
+.ga-stats-chart-card canvas {
+  width: 100% !important;
+  height: 200px !important;
+}
+
+.ga-stats-summary-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ga-stats-kpi {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-kpi-val {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  color: #333;
+}
+
+.ga-kpi-label {
+  display: block;
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.ga-stats-table-wrap {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-stats-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ==================== WINNERS PAGE ==================== */
+.ga-winners-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.ga-winners-mp-filter {
+  display: flex;
+  gap: 6px;
+}
+
+.ga-winners-month-select {
+  display: flex;
+  gap: 2px;
+}
+
+.ga-month-btn {
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #666;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-month-btn:hover:not(.disabled) {
+  background: #FFF8E7;
+  border-color: #F5A623;
+}
+
+.ga-month-btn.active {
+  background: #F5A623;
+  border-color: #F5A623;
+  color: #fff;
+}
+
+.ga-month-btn.disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.ga-winners-table-wrap {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+
+.ga-winners-table th {
+  text-align: center;
+  font-size: 9px;
+}
+
+.ga-winner-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.ga-winner-thumb-empty {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* ==================== FOOTER ==================== */
+.ga-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  margin-top: 24px;
+  border-top: 1px solid #eee;
+}
+
+.ga-footer-left, .ga-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #999;
+}
+
+.ga-footer-brand {
+  font-weight: 700;
+  color: #F5A623;
+}
+
+.ga-footer-sep {
+  color: #ddd;
+}
+
+.ga-footer-link {
+  color: #F5A623;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ga-footer-link:hover {
+  text-decoration: underline;
+}
+
+/* ==================== EMPTY STATE ==================== */
+.ga-empty-state {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.ga-empty-state.full-width {
+  grid-column: 1 / -1;
+}
+
+.ga-empty-icon {
+  display: block;
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.ga-empty-state h3 {
+  font-size: 16px;
+  color: #555;
+  margin: 0 0 6px;
+}
+
+.ga-empty-state p {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+/* ==================== HIDE ORIGINAL MBA CONTENT ==================== */
 body.gastca-active #dashboard-container {
   display: none !important;
 }
 
 body.gastca-active .app-outlet > ng-component > .container-fluid {
   display: none !important;
+}
+
+body.gastca-active .app-outlet > ng-component > div:not(#gastca-wrapper) {
+  display: none !important;
+}
+
+/* Keep the nav visible */
+body.gastca-active #nav-container {
+  display: block !important;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1200px) {
+  .ga-dash-main {
+    flex-direction: column;
+  }
+  .ga-today-panel {
+    width: 100%;
+    min-width: auto;
+  }
+  .ga-dash-bottom {
+    flex-direction: column;
+  }
+  .ga-analytics-summary {
+    grid-template-columns: 1fr;
+  }
+  .ga-stats-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .ga-header-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .ga-progress-row {
+    flex-wrap: wrap;
+  }
+  .ga-progress-item {
+    flex: none;
+    width: 50%;
+  }
+}
+
+/* ==================== SCROLLBAR ==================== */
+#gastca-wrapper ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+#gastca-wrapper ::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+#gastca-wrapper ::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+#gastca-wrapper ::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
