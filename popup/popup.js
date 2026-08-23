@@ -1,4 +1,4 @@
-// GAsTCA Popup Script
+// GAsTCA Popup Script v2 - Updated for marketplace data
 
 document.addEventListener('DOMContentLoaded', () => {
   initPopup();
@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function initPopup() {
   await loadTheme();
+  await loadAccountInfo();
   await loadStats();
   await loadRecentSales();
   setupEventListeners();
@@ -27,22 +28,43 @@ function toggleTheme() {
   chrome.storage.local.set({ theme: newTheme });
 }
 
+// Load Account Info
+async function loadAccountInfo() {
+  const result = await chrome.storage.local.get('accountInfo');
+  const info = result.accountInfo || {};
+
+  if (info.tier) {
+    document.getElementById('accountTier').textContent = `Tier ${info.tier}`;
+  }
+  if (info.publishedDesigns) {
+    document.getElementById('accountDesigns').textContent = `${info.publishedDesigns}/${info.maxDesigns} designs`;
+  }
+  if (info.productPotential) {
+    document.getElementById('accountProducts').textContent = `${info.productPotential} products`;
+  }
+}
+
 // Load Stats from Storage
 async function loadStats() {
   const result = await chrome.storage.local.get('salesData');
   const data = result.salesData || {};
   
   const today = new Date().toISOString().split('T')[0];
-  const todayData = data[today] || { sales: 0, units: 0, royalties: 0 };
+  const todayData = data[today] || { sales: 0, units: 0, royalties: 0, marketplaces: [] };
   
-  document.getElementById('todaySales').textContent = formatCurrency(todayData.sales);
-  document.getElementById('todayUnits').textContent = todayData.units;
+  document.getElementById('todaySales').textContent = todayData.units || 0;
   document.getElementById('todayRoyalties').textContent = formatCurrency(todayData.royalties);
+
+  // Marketplace breakdown
+  const marketplaces = todayData.marketplaces || [];
+  const mpMap = { US: 'mpUS', UK: 'mpUK', DE: 'mpDE', JP: 'mpJP' };
   
-  // Total products
-  const productsResult = await chrome.storage.local.get('products');
-  const products = productsResult.products || [];
-  document.getElementById('totalProducts').textContent = products.length;
+  marketplaces.forEach(mp => {
+    const elId = mpMap[mp.marketplace];
+    if (elId) {
+      document.getElementById(elId).textContent = mp.units || 0;
+    }
+  });
 }
 
 // Load Recent Sales
@@ -56,19 +78,21 @@ async function loadRecentSales() {
   }
   
   container.innerHTML = '';
-  const displaySales = sales.slice(0, 5); // Show last 5
+  const displaySales = sales.slice(0, 5);
   
   displaySales.forEach(sale => {
     const item = document.createElement('div');
     item.className = 'sale-item';
+    
+    const mpFlag = getMarketplaceFlag(sale.marketplace);
     item.innerHTML = `
-      <span class="sale-product">${sale.product || 'Unknown Product'}</span>
+      <span class="sale-flag">${mpFlag}</span>
+      <span class="sale-product">${sale.product || 'Sale'}</span>
       <span class="sale-amount">+${formatCurrency(sale.royalty)}</span>
     `;
     container.appendChild(item);
   });
   
-  // Update badge
   const newCount = sales.filter(s => !s.seen).length;
   document.getElementById('newSalesBadge').textContent = `${newCount} new`;
 }
@@ -81,7 +105,7 @@ async function checkConnection() {
   const dot = statusBar.querySelector('.status-dot');
   const text = statusBar.querySelector('.status-text');
   
-  if (lastScrape && (Date.now() - lastScrape) < 300000) { // 5 min
+  if (lastScrape && (Date.now() - lastScrape) < 300000) {
     dot.classList.add('online');
     text.textContent = 'Connected to MBA';
   } else {
@@ -105,30 +129,24 @@ async function updateLastSync() {
 
 // Event Listeners
 function setupEventListeners() {
-  // Theme toggle
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   
-  // Open full dashboard
   document.getElementById('openDashboard').addEventListener('click', () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('dashboard/dashboard.html') });
   });
   
-  // Open niche research
   document.getElementById('openNicheResearch').addEventListener('click', () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('dashboard/dashboard.html#niche') });
   });
   
-  // Open keywords
   document.getElementById('openKeywords').addEventListener('click', () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('dashboard/dashboard.html#keywords') });
   });
   
-  // Open trending
   document.getElementById('openTrending').addEventListener('click', () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('dashboard/dashboard.html#trending') });
   });
   
-  // Settings
   document.getElementById('settingsBtn').addEventListener('click', () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('dashboard/dashboard.html#settings') });
   });
@@ -153,11 +171,20 @@ function getRelativeTime(timestamp) {
   return `${days}d ago`;
 }
 
+function getMarketplaceFlag(mp) {
+  const flags = {
+    'US': '🇺🇸', 'UK': '🇬🇧', 'DE': '🇩🇪', 'FR': '🇫🇷',
+    'IT': '🇮🇹', 'ES': '🇪🇸', 'JP': '🇯🇵', 'AU': '🇦🇺'
+  };
+  return flags[mp] || '🌍';
+}
+
 // Listen for real-time updates
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'local') {
     if (changes.salesData) loadStats();
     if (changes.recentSales) loadRecentSales();
+    if (changes.accountInfo) loadAccountInfo();
     if (changes.lastScrapeTime) {
       checkConnection();
       updateLastSync();

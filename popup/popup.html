@@ -32,6 +32,13 @@
       </div>
     </header>
 
+    <!-- Account Info Bar -->
+    <div class="account-bar" id="accountBar">
+      <span class="account-tier" id="accountTier">Tier --</span>
+      <span class="account-designs" id="accountDesigns">-- designs</span>
+      <span class="account-products" id="accountProducts">-- products</span>
+    </div>
+
     <!-- Connection Status -->
     <div class="status-bar" id="statusBar">
       <span class="status-dot online"></span>
@@ -43,14 +50,7 @@
       <div class="stat-card">
         <div class="stat-icon sales-icon">💰</div>
         <div class="stat-info">
-          <span class="stat-value" id="todaySales">$0.00</span>
-          <span class="stat-label">Today's Sales</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon units-icon">📦</div>
-        <div class="stat-info">
-          <span class="stat-value" id="todayUnits">0</span>
+          <span class="stat-value" id="todaySales">0</span>
           <span class="stat-label">Units Sold</span>
         </div>
       </div>
@@ -61,11 +61,29 @@
           <span class="stat-label">Royalties</span>
         </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon products-icon">🎨</div>
-        <div class="stat-info">
-          <span class="stat-value" id="totalProducts">0</span>
-          <span class="stat-label">Live Products</span>
+    </section>
+
+    <!-- Marketplace Breakdown -->
+    <section class="marketplace-section">
+      <div class="section-header">
+        <h3>Marketplaces</h3>
+      </div>
+      <div class="marketplace-grid" id="marketplaceGrid">
+        <div class="marketplace-item">
+          <span class="mp-flag">🇺🇸</span>
+          <span class="mp-units" id="mpUS">0</span>
+        </div>
+        <div class="marketplace-item">
+          <span class="mp-flag">🇬🇧</span>
+          <span class="mp-units" id="mpUK">0</span>
+        </div>
+        <div class="marketplace-item">
+          <span class="mp-flag">🇩🇪</span>
+          <span class="mp-units" id="mpDE">0</span>
+        </div>
+        <div class="marketplace-item">
+          <span class="mp-flag">🇯🇵</span>
+          <span class="mp-units" id="mpJP">0</span>
         </div>
       </div>
     </section>

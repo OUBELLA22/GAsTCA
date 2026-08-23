@@ -1,50 +1,46 @@
-// GAsTCA - Merch by Amazon Dashboard Scraper
-// This content script runs on merch.amazon.com and extracts sales, products, and royalty data
+// GAsTCA - Merch by Amazon Dashboard Scraper v2
+// Updated to match real MBA dashboard structure (merch.amazon.com)
+// Reads: Account status, sales data, products, royalties, marketplace data
 
 (function() {
   'use strict';
 
   // ==================== CONFIGURATION ====================
-  const SCRAPE_INTERVAL = 60000; // Default: check every 60 seconds
-  const MAX_RETRY_ATTEMPTS = 3;
-
+  const SCRAPE_INTERVAL = 60000; // Check every 60 seconds
   let isRunning = false;
-  let previousSalesCount = null;
   let scrapeTimer = null;
+  let previousTotalUnits = null;
 
   // ==================== INITIALIZATION ====================
   function init() {
-    console.log('[GAsTCA] 🚀 Content script loaded on MBA dashboard');
+    console.log('[GAsTCA] 🚀 MBA Dashboard scraper v2 loaded');
     
-    // Wait for page to fully load
     if (document.readyState === 'complete') {
       startScraping();
     } else {
       window.addEventListener('load', startScraping);
     }
 
-    // Listen for messages from background/popup
     chrome.runtime.onMessage.addListener(handleMessage);
   }
 
   function startScraping() {
     console.log('[GAsTCA] Starting data scraper...');
     isRunning = true;
-    
-    // Initial scrape
-    scrapeAllData();
-    
-    // Set up periodic scraping
+
+    // Wait a bit for MBA dashboard to fully render
+    setTimeout(() => {
+      scrapeAllData();
+      addStatusBadge();
+    }, 2000);
+
     setupPeriodicScrape();
-    
-    // Watch for DOM changes (MBA uses dynamic content)
     setupMutationObserver();
   }
 
   async function setupPeriodicScrape() {
     const result = await chrome.storage.local.get('refreshInterval');
     const interval = (result.refreshInterval || 60) * 1000;
-    
     if (scrapeTimer) clearInterval(scrapeTimer);
     scrapeTimer = setInterval(scrapeAllData, interval);
   }
@@ -54,146 +50,223 @@
     if (!isRunning) return;
 
     try {
+      const accountData = scrapeAccountStatus();
       const salesData = scrapeSalesData();
-      const products = scrapeProducts();
-      const royalties = scrapeRoyalties();
-
+      const productsData = scrapeRecentProducts();
+      
       const today = new Date().toISOString().split('T')[0];
 
-      // Get existing data
-      const stored = await chrome.storage.local.get(['salesData', 'products', 'recentSales', 'lastSalesCount']);
+      // Get existing stored data
+      const stored = await chrome.storage.local.get([
+        'salesData', 'products', 'recentSales', 'lastTotalUnits', 'accountInfo'
+      ]);
+      
       const existingSalesData = stored.salesData || {};
       const existingRecentSales = stored.recentSales || [];
 
       // Update today's data
       existingSalesData[today] = {
-        sales: salesData.totalSales,
-        royalties: royalties.totalRoyalties,
+        sales: salesData.totalRevenue,
+        royalties: salesData.totalRoyalties,
         units: salesData.totalUnits,
+        marketplaces: salesData.marketplaces,
         timestamp: Date.now()
       };
 
-      // Check for new sales
-      const lastSalesCount = stored.lastSalesCount || 0;
-      if (salesData.totalUnits > lastSalesCount && lastSalesCount > 0) {
-        const newSalesCount = salesData.totalUnits - lastSalesCount;
-        
+      // Detect new sales
+      const lastTotalUnits = stored.lastTotalUnits || 0;
+      if (salesData.totalUnits > lastTotalUnits && lastTotalUnits > 0) {
+        const newSalesCount = salesData.totalUnits - lastTotalUnits;
+
         // Add to recent sales
         for (let i = 0; i < newSalesCount; i++) {
           existingRecentSales.unshift({
-            product: 'New Sale Detected',
-            royalty: royalties.avgRoyaltyPerUnit || 0,
+            product: 'New Sale!',
+            royalty: salesData.avgRoyaltyPerUnit || 0,
+            marketplace: salesData.lastMarketplace || '',
             timestamp: Date.now(),
             seen: false
           });
         }
 
-        // Keep only last 50 recent sales
-        if (existingRecentSales.length > 50) {
-          existingRecentSales.length = 50;
+        // Keep only last 100
+        if (existingRecentSales.length > 100) {
+          existingRecentSales.length = 100;
         }
 
-        // Notify background script about new sale
+        // Notify background about new sale
         chrome.runtime.sendMessage({
           type: 'NEW_SALE',
           data: {
             count: newSalesCount,
-            royalty: royalties.avgRoyaltyPerUnit || 0,
+            royalty: salesData.avgRoyaltyPerUnit || 0,
             totalToday: salesData.totalUnits
           }
         });
+
+        // Show on-page toast notification
+        showSaleToast(newSalesCount, salesData.avgRoyaltyPerUnit);
       }
 
       // Save all data
       await chrome.storage.local.set({
         salesData: existingSalesData,
-        products: products,
+        products: productsData,
         recentSales: existingRecentSales,
-        lastSalesCount: salesData.totalUnits,
+        lastTotalUnits: salesData.totalUnits,
+        accountInfo: accountData,
         lastScrapeTime: Date.now()
       });
 
-      console.log('[GAsTCA] ✅ Data scraped successfully', {
-        sales: salesData.totalSales,
-        units: salesData.totalUnits,
-        royalties: royalties.totalRoyalties,
-        products: products.length
+      console.log('[GAsTCA] ✅ Scraped:', {
+        account: accountData,
+        sales: salesData,
+        products: productsData.length
       });
+
+      updateStatusBadge(true);
 
     } catch (error) {
       console.error('[GAsTCA] ❌ Scraping error:', error);
+      updateStatusBadge(false);
     }
+  }
+
+  // ==================== ACCOUNT STATUS SCRAPER ====================
+  function scrapeAccountStatus() {
+    const data = {
+      tier: 0,
+      royaltyGroup: '',
+      submittedToday: 0,
+      maxSubmitToday: 10,
+      publishedDesigns: 0,
+      maxDesigns: 100,
+      productPotential: 0,
+      maxProducts: 10500
+    };
+
+    try {
+      // "Account status · Tier 100 · Royalty Group: Creator"
+      const accountText = document.body.innerText;
+      
+      const tierMatch = accountText.match(/Tier\s+(\d+)/i);
+      if (tierMatch) data.tier = parseInt(tierMatch[1]);
+
+      const royaltyMatch = accountText.match(/Royalty Group:\s*(\w+)/i);
+      if (royaltyMatch) data.royaltyGroup = royaltyMatch[1];
+
+      // "Products submitted today" section - "0 of 10"
+      const submitMatch = accountText.match(/(\d+)\s*of\s*(\d+)\s*\d*%?\s*Published designs/i);
+      if (submitMatch) {
+        // This might catch the wrong one, try more specific
+      }
+
+      // Look for the progress bars / stats
+      // "0 of 10" for submitted today
+      // "92 of 100" for published designs  
+      // "668 of 10,500" for product potential
+      const ofPatterns = accountText.match(/(\d+)\s+of\s+(\d[\d,]*)/g);
+      if (ofPatterns) {
+        ofPatterns.forEach(match => {
+          const nums = match.match(/(\d+)\s+of\s+([\d,]+)/);
+          if (nums) {
+            const current = parseInt(nums[1]);
+            const max = parseInt(nums[2].replace(/,/g, ''));
+            
+            if (max === 10) {
+              data.submittedToday = current;
+              data.maxSubmitToday = max;
+            } else if (max === 100 || max === 500 || max === 2000 || max === 4000 || max === 8000) {
+              data.publishedDesigns = current;
+              data.maxDesigns = max;
+            } else if (max >= 10000) {
+              data.productPotential = current;
+              data.maxProducts = max;
+            }
+          }
+        });
+      }
+
+    } catch (e) {
+      console.error('[GAsTCA] Error scraping account:', e);
+    }
+
+    return data;
   }
 
   // ==================== SALES DATA SCRAPER ====================
   function scrapeSalesData() {
     const data = {
-      totalSales: 0,
       totalUnits: 0,
-      salesByProduct: []
+      totalRoyalties: 0,
+      totalRevenue: 0,
+      avgRoyaltyPerUnit: 0,
+      marketplaces: [],
+      lastMarketplace: '',
+      dateRange: ''
     };
 
     try {
-      // Try to find sales summary on MBA dashboard
-      // MBA dashboard selectors (these may need updating as Amazon changes their UI)
+      // DATE RANGE: Look for "DATE RANGE: LAST 7 DAYS" etc.
+      const dateRangeMatch = document.body.innerText.match(/DATE RANGE:\s*(.+)/i);
+      if (dateRangeMatch) data.dateRange = dateRangeMatch[1].trim();
+
+      // RECENT SALES section
+      // Structure: Currency boxes showing "Purchased" count and "Estimated Royalties" amount
+      // Example: "USD 0 USD 0.00" / "GBP 0 GBP 0.00" / "EUR 1 EUR 2.70" / "JPY 0 JPY 0"
       
-      // Method 1: Look for sales summary table/cards
-      const salesElements = document.querySelectorAll('[data-testid*="sales"], .sales-summary, .kpi-value, [class*="salesAmount"]');
-      if (salesElements.length > 0) {
-        salesElements.forEach(el => {
-          const text = el.textContent.trim();
-          const amount = parseFloat(text.replace(/[$,]/g, ''));
-          if (!isNaN(amount)) {
-            data.totalSales += amount;
-          }
-        });
-      }
+      // Method 1: Find all marketplace sales boxes
+      const salesSection = document.body.innerText;
+      
+      // Match patterns like: "USD\n0\nUSD 0.00" or "EUR\n1\nEUR 2.70"
+      const marketplacePatterns = [
+        { currency: 'USD', symbol: '$', marketplace: 'US' },
+        { currency: 'GBP', symbol: '£', marketplace: 'UK' },
+        { currency: 'EUR', symbol: '€', marketplace: 'DE' },
+        { currency: 'JPY', symbol: '¥', marketplace: 'JP' }
+      ];
 
-      // Method 2: Parse from the MBA analyze page
-      const analyzeTable = document.querySelector('#analyse-table, [class*="AnalyseTable"], table.a-bordered');
-      if (analyzeTable) {
-        const rows = analyzeTable.querySelectorAll('tbody tr');
-        rows.forEach(row => {
-          const cells = row.querySelectorAll('td');
-          if (cells.length >= 4) {
-            const units = parseInt(cells[1]?.textContent?.trim()) || 0;
-            const royalty = parseFloat(cells[3]?.textContent?.replace(/[$,]/g, '').trim()) || 0;
-            data.totalUnits += units;
-            data.totalSales += royalty;
-          }
-        });
-      }
-
-      // Method 3: Look for the earnings/royalties summary
-      const earningsElements = document.querySelectorAll('[class*="earning"], [class*="royalt"], [class*="revenue"]');
-      earningsElements.forEach(el => {
-        const text = el.textContent.trim();
-        const match = text.match(/\$[\d,.]+/);
+      marketplacePatterns.forEach(mp => {
+        // Pattern: "USD\n0\nUSD 0.00" or "EUR\n1\nEUR 2.70"
+        // Also matches "0 USD 0.00 Purchased Estimated Royalties"
+        const regex = new RegExp(mp.currency + '\\s*(\\d+)\\s*' + mp.currency + '\\s*([\\d,.]+)', 'i');
+        const match = salesSection.match(regex);
+        
         if (match) {
-          const amount = parseFloat(match[0].replace(/[$,]/g, ''));
-          if (!isNaN(amount) && amount > data.totalSales) {
-            data.totalSales = amount;
+          const units = parseInt(match[1]) || 0;
+          const royalties = parseFloat(match[2].replace(/,/g, '')) || 0;
+
+          data.marketplaces.push({
+            currency: mp.currency,
+            marketplace: mp.marketplace,
+            units: units,
+            royalties: royalties
+          });
+
+          data.totalUnits += units;
+          data.totalRoyalties += royalties; // Note: mixed currencies, but tracking total
+          
+          if (units > 0) {
+            data.lastMarketplace = mp.marketplace;
           }
         }
       });
 
-      // Method 4: Generic number extraction from known MBA page structure
-      const allText = document.body.innerText;
-      
-      // Look for "Units Sold" or similar patterns
-      const unitsMatch = allText.match(/(\d+)\s*(?:units?\s*sold|sold)/i);
-      if (unitsMatch && parseInt(unitsMatch[1]) > data.totalUnits) {
-        data.totalUnits = parseInt(unitsMatch[1]);
+      // Calculate average royalty per unit
+      if (data.totalUnits > 0) {
+        data.avgRoyaltyPerUnit = data.totalRoyalties / data.totalUnits;
       }
 
-      // Look for total royalties pattern
-      const royaltyMatch = allText.match(/(?:total|royalt[iy]|earned?)[\s:]*\$?([\d,.]+)/i);
-      if (royaltyMatch) {
-        const amount = parseFloat(royaltyMatch[1].replace(/,/g, ''));
-        if (!isNaN(amount) && amount > 0) {
-          data.totalSales = Math.max(data.totalSales, amount);
+      // Method 2: Try to parse from table/grid elements directly
+      const allElements = document.querySelectorAll('td, .a-text-center, [class*="col"]');
+      allElements.forEach(el => {
+        const text = el.textContent.trim();
+        // Look for currency amounts
+        const currencyMatch = text.match(/^(USD|GBP|EUR|JPY)\s+([\d,.]+)$/);
+        if (currencyMatch) {
+          // Already handled above
         }
-      }
+      });
 
     } catch (e) {
       console.error('[GAsTCA] Error scraping sales:', e);
@@ -203,61 +276,95 @@
   }
 
   // ==================== PRODUCTS SCRAPER ====================
-  function scrapeProducts() {
+  function scrapeRecentProducts() {
     const products = [];
 
     try {
-      // Method 1: MBA Manage page - product cards/table
-      const productRows = document.querySelectorAll(
-        '[class*="product-row"], [class*="ProductCard"], .manage-table tbody tr, [data-testid*="product"]'
-      );
+      // "Recent product status" table
+      // Columns: Mkt, (image), Title, Status
+      const tables = document.querySelectorAll('table');
+      
+      tables.forEach(table => {
+        const headers = table.querySelectorAll('th');
+        let hasMkt = false;
+        let hasTitle = false;
+        let hasStatus = false;
 
-      productRows.forEach((row, index) => {
-        const product = extractProductFromRow(row, index);
-        if (product) products.push(product);
+        headers.forEach(th => {
+          const text = th.textContent.trim().toLowerCase();
+          if (text.includes('mkt')) hasMkt = true;
+          if (text.includes('title')) hasTitle = true;
+          if (text.includes('status')) hasStatus = true;
+        });
+
+        if (hasTitle || hasMkt) {
+          const rows = table.querySelectorAll('tbody tr, tr:not(:first-child)');
+          rows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 2) {
+              const marketplace = cells[0]?.textContent?.trim() || '';
+              
+              // Find title - might be in different cells depending on image presence
+              let title = '';
+              let status = '';
+              let image = '';
+
+              cells.forEach(cell => {
+                const img = cell.querySelector('img');
+                if (img) image = img.src;
+                
+                const link = cell.querySelector('a');
+                if (link && link.textContent.trim().length > 5) {
+                  title = link.textContent.trim();
+                }
+                
+                const text = cell.textContent.trim();
+                if (text === 'Live' || text === 'Auto-uploaded' || text === 'Under review' || 
+                    text === 'Rejected' || text === 'Removed' || text === 'Processing') {
+                  status = text;
+                }
+              });
+
+              if (!title) {
+                // Fallback: get longest text content from cells
+                let maxLen = 0;
+                cells.forEach(cell => {
+                  const text = cell.textContent.trim();
+                  if (text.length > maxLen && !['Live', 'Auto-uploaded', 'Under review'].includes(text) && text.length > 5) {
+                    maxLen = text.length;
+                    title = text;
+                  }
+                });
+              }
+
+              if (title) {
+                products.push({
+                  title: title.substring(0, 120),
+                  marketplace: marketplace.replace('.', ''),
+                  status: status,
+                  image: image,
+                  type: detectProductType(title),
+                  index: index
+                });
+              }
+            }
+          });
+        }
       });
 
-      // Method 2: If on analyze page, get product data from table
+      // If no table found, try generic approach
       if (products.length === 0) {
-        const tableRows = document.querySelectorAll('table tbody tr');
-        tableRows.forEach((row, index) => {
-          const cells = row.querySelectorAll('td');
-          if (cells.length >= 3) {
-            const titleCell = cells[0];
-            const title = titleCell?.textContent?.trim() || `Product ${index + 1}`;
-            
-            // Try to get ASIN from link
-            const link = titleCell?.querySelector('a');
-            const asinMatch = link?.href?.match(/\/dp\/(B[A-Z0-9]+)/);
-            
+        // Look for product links
+        const links = document.querySelectorAll('a[href*="/dp/"], a[href*="product"]');
+        links.forEach((link, index) => {
+          const title = link.textContent.trim();
+          if (title && title.length > 5) {
+            const asinMatch = link.href?.match(/\/dp\/(B[A-Z0-9]+)/);
             products.push({
-              title: title.substring(0, 100),
+              title: title.substring(0, 120),
               asin: asinMatch ? asinMatch[1] : '',
               type: detectProductType(title),
               status: 'Live',
-              totalSales: 0,
-              index: index
-            });
-          }
-        });
-      }
-
-      // Method 3: Look for product cards with images
-      if (products.length === 0) {
-        const cards = document.querySelectorAll('[class*="card"], [class*="listing"], [class*="item"]');
-        cards.forEach((card, index) => {
-          const title = card.querySelector('[class*="title"], h3, h4, [class*="name"]');
-          const asinEl = card.querySelector('[class*="asin"], [data-asin]');
-          const img = card.querySelector('img');
-
-          if (title) {
-            products.push({
-              title: title.textContent.trim().substring(0, 100),
-              asin: asinEl?.textContent?.trim() || asinEl?.getAttribute('data-asin') || '',
-              type: detectProductType(title.textContent),
-              image: img?.src || '',
-              status: 'Live',
-              totalSales: 0,
               index: index
             });
           }
@@ -271,132 +378,229 @@
     return products;
   }
 
-  function extractProductFromRow(row, index) {
-    try {
-      const title = row.querySelector('[class*="title"], [class*="name"], td:first-child')?.textContent?.trim();
-      if (!title || title.length < 3) return null;
-
-      const asinEl = row.querySelector('[class*="asin"], [data-asin]');
-      const statusEl = row.querySelector('[class*="status"]');
-      const img = row.querySelector('img');
-      
-      // Try to find ASIN from any link
-      const links = row.querySelectorAll('a');
-      let asin = asinEl?.textContent?.trim() || '';
-      if (!asin) {
-        links.forEach(link => {
-          const match = link.href?.match(/\/dp\/(B[A-Z0-9]+)/) || link.href?.match(/(B[A-Z0-9]{9})/);
-          if (match) asin = match[1];
-        });
-      }
-
-      return {
-        title: title.substring(0, 100),
-        asin: asin,
-        type: detectProductType(title),
-        image: img?.src || '',
-        status: statusEl?.textContent?.trim() || 'Live',
-        totalSales: 0,
-        index: index
-      };
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function detectProductType(text) {
-    const lower = (text || '').toLowerCase();
-    if (lower.includes('hoodie') || lower.includes('sweatshirt')) return 'Hoodie';
-    if (lower.includes('tank')) return 'Tank Top';
-    if (lower.includes('long sleeve')) return 'Long Sleeve';
-    if (lower.includes('popsocket') || lower.includes('pop socket')) return 'PopSocket';
-    if (lower.includes('phone case')) return 'Phone Case';
-    if (lower.includes('tote')) return 'Tote Bag';
-    if (lower.includes('throw pillow') || lower.includes('pillow')) return 'Throw Pillow';
-    return 'T-Shirt';
-  }
-
-  // ==================== ROYALTIES SCRAPER ====================
-  function scrapeRoyalties() {
-    const data = {
-      totalRoyalties: 0,
-      avgRoyaltyPerUnit: 0,
-      royaltiesByProduct: []
-    };
+  // ==================== ANALYZE PAGE SCRAPER ====================
+  // Called when user is on the "Analyze" tab
+  function scrapeAnalyzePage() {
+    const data = { entries: [] };
 
     try {
-      // Look for royalty/earnings displays
-      const royaltyElements = document.querySelectorAll(
-        '[class*="royalt"], [class*="earning"], [class*="revenue"], [class*="amount"]'
-      );
-
-      let amounts = [];
-      royaltyElements.forEach(el => {
-        const text = el.textContent.trim();
-        const matches = text.match(/\$[\d,.]+/g);
-        if (matches) {
-          matches.forEach(m => {
-            const amount = parseFloat(m.replace(/[$,]/g, ''));
-            if (!isNaN(amount) && amount > 0) {
-              amounts.push(amount);
-            }
-          });
-        }
-      });
-
-      // Look in table cells for royalty column
+      // The Analyze page has a table with: Date, ASIN, Title, Type, Marketplace, 
+      // Purchased, Cancelled, Returned, Currency, Royalty
       const tables = document.querySelectorAll('table');
+      
       tables.forEach(table => {
-        const headers = table.querySelectorAll('th');
-        let royaltyColIndex = -1;
-        
-        headers.forEach((th, index) => {
-          if (th.textContent.toLowerCase().includes('royalt')) {
-            royaltyColIndex = index;
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          if (cells.length >= 5) {
+            const entry = {
+              date: cells[0]?.textContent?.trim(),
+              asin: cells[1]?.textContent?.trim(),
+              title: cells[2]?.textContent?.trim(),
+              type: cells[3]?.textContent?.trim(),
+              marketplace: cells[4]?.textContent?.trim(),
+              purchased: parseInt(cells[5]?.textContent?.trim()) || 0,
+              cancelled: parseInt(cells[6]?.textContent?.trim()) || 0,
+              returned: parseInt(cells[7]?.textContent?.trim()) || 0,
+              currency: cells[8]?.textContent?.trim(),
+              royalty: parseFloat(cells[9]?.textContent?.replace(/[^0-9.-]/g, '')) || 0
+            };
+            data.entries.push(entry);
           }
         });
-
-        if (royaltyColIndex >= 0) {
-          const rows = table.querySelectorAll('tbody tr');
-          rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            if (cells[royaltyColIndex]) {
-              const amount = parseFloat(cells[royaltyColIndex].textContent.replace(/[$,]/g, ''));
-              if (!isNaN(amount)) {
-                data.totalRoyalties += amount;
-                amounts.push(amount);
-              }
-            }
-          });
-        }
       });
 
-      // If we found amounts, use the largest as total
-      if (amounts.length > 0) {
-        data.totalRoyalties = Math.max(data.totalRoyalties, Math.max(...amounts));
-        data.avgRoyaltyPerUnit = amounts.reduce((a, b) => a + b, 0) / amounts.length;
+      // Store analyze data
+      if (data.entries.length > 0) {
+        chrome.storage.local.set({ analyzeData: data.entries });
       }
 
     } catch (e) {
-      console.error('[GAsTCA] Error scraping royalties:', e);
+      console.error('[GAsTCA] Error scraping analyze page:', e);
     }
 
     return data;
+  }
+
+  // ==================== MANAGE PAGE SCRAPER ====================
+  // Called when user is on the "Manage" tab
+  function scrapeManagePage() {
+    const products = [];
+
+    try {
+      const rows = document.querySelectorAll('table tbody tr, [class*="product-row"]');
+      
+      rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 3) {
+          let title = '';
+          let asin = '';
+          let marketplace = '';
+          let status = '';
+          let image = '';
+          let dateAdded = '';
+
+          cells.forEach(cell => {
+            const img = cell.querySelector('img');
+            if (img && img.src.includes('amazon')) image = img.src;
+
+            const link = cell.querySelector('a');
+            if (link) {
+              const href = link.href || '';
+              const asinMatch = href.match(/\/dp\/(B[A-Z0-9]+)/) || href.match(/(B[A-Z0-9]{9})/);
+              if (asinMatch) asin = asinMatch[1];
+              if (link.textContent.trim().length > 5 && !title) {
+                title = link.textContent.trim();
+              }
+            }
+
+            const text = cell.textContent.trim();
+            if (['Live', 'Auto-uploaded', 'Under review', 'Rejected', 'Removed', 'Processing', 'Draft'].includes(text)) {
+              status = text;
+            }
+            if (text.match(/^\.(com|co\.uk|de|fr|it|es|co\.jp)$/)) {
+              marketplace = text;
+            }
+          });
+
+          if (title) {
+            products.push({
+              title: title.substring(0, 120),
+              asin: asin,
+              marketplace: marketplace,
+              status: status,
+              image: image,
+              type: detectProductType(title),
+              index: index
+            });
+          }
+        }
+      });
+
+      if (products.length > 0) {
+        chrome.storage.local.set({ allProducts: products });
+      }
+
+    } catch (e) {
+      console.error('[GAsTCA] Error scraping manage page:', e);
+    }
+
+    return products;
+  }
+
+  // ==================== PAGE DETECTION ====================
+  function detectCurrentPage() {
+    const url = window.location.href;
+    const path = window.location.pathname;
+    
+    // Check navigation tabs
+    if (path.includes('dashboard') || path === '/' || path === '') return 'dashboard';
+    if (path.includes('analyze') || path.includes('analytics')) return 'analyze';
+    if (path.includes('manage')) return 'manage';
+    if (path.includes('create')) return 'create';
+    
+    // Check by tab active state
+    const activeTab = document.querySelector('[class*="active"] a, .selected-tab, [aria-selected="true"]');
+    if (activeTab) {
+      const tabText = activeTab.textContent.toLowerCase();
+      if (tabText.includes('analyze')) return 'analyze';
+      if (tabText.includes('manage')) return 'manage';
+      if (tabText.includes('dashboard')) return 'dashboard';
+    }
+
+    return 'dashboard'; // Default
+  }
+
+  // ==================== UTILITY FUNCTIONS ====================
+  function detectProductType(text) {
+    const lower = (text || '').toLowerCase();
+    if (lower.includes('hoodie') || lower.includes('sweatshirt') || lower.includes('pullover')) return 'Hoodie';
+    if (lower.includes('tank')) return 'Tank Top';
+    if (lower.includes('long sleeve') || lower.includes('langarm')) return 'Long Sleeve';
+    if (lower.includes('popsocket') || lower.includes('pop socket')) return 'PopSocket';
+    if (lower.includes('phone case') || lower.includes('hülle')) return 'Phone Case';
+    if (lower.includes('tote') || lower.includes('tasche')) return 'Tote Bag';
+    if (lower.includes('v-neck') || lower.includes('v-ausschnitt')) return 'V-Neck';
+    if (lower.includes('raglan')) return 'Raglan';
+    if (lower.includes('premium')) return 'Premium T-Shirt';
+    if (lower.includes('trinkhumor') || lower.includes('trinken')) return 'T-Shirt';
+    return 'T-Shirt';
+  }
+
+  // ==================== UI: STATUS BADGE ====================
+  function addStatusBadge() {
+    // Don't add if already exists
+    if (document.querySelector('.gastca-status-badge')) return;
+
+    const badge = document.createElement('div');
+    badge.className = 'gastca-status-badge';
+    badge.innerHTML = `
+      <div class="gastca-logo">G</div>
+      <span class="gastca-sync-dot"></span>
+      <span class="gastca-text">GAsTCA syncing...</span>
+    `;
+    badge.addEventListener('click', () => {
+      chrome.runtime.sendMessage({ type: 'OPEN_DASHBOARD' });
+    });
+    document.body.appendChild(badge);
+  }
+
+  function updateStatusBadge(success) {
+    const badge = document.querySelector('.gastca-status-badge');
+    if (!badge) return;
+
+    const dot = badge.querySelector('.gastca-sync-dot');
+    const text = badge.querySelector('.gastca-text');
+
+    if (success) {
+      dot.style.background = '#4CAF50';
+      dot.style.boxShadow = '0 0 4px #4CAF50';
+      text.textContent = 'GAsTCA synced ✓';
+    } else {
+      dot.style.background = '#FF9800';
+      dot.style.boxShadow = '0 0 4px #FF9800';
+      text.textContent = 'GAsTCA sync error';
+    }
+
+    // Reset text after 3 seconds
+    setTimeout(() => {
+      if (text) text.textContent = 'GAsTCA active';
+    }, 3000);
+  }
+
+  // ==================== UI: SALE TOAST ====================
+  function showSaleToast(count, royalty) {
+    // Remove existing toasts
+    document.querySelectorAll('.gastca-sale-toast').forEach(t => t.remove());
+
+    const toast = document.createElement('div');
+    toast.className = 'gastca-sale-toast';
+    toast.innerHTML = `
+      <span class="toast-icon">💰</span>
+      <div class="toast-content">
+        <div class="toast-title">Cha-Ching! New Sale!</div>
+        <div class="toast-message">${count} unit${count > 1 ? 's' : ''} sold</div>
+      </div>
+      <span class="toast-amount">+$${(royalty * count).toFixed(2)}</span>
+    `;
+    document.body.appendChild(toast);
+
+    // Remove after 5 seconds
+    setTimeout(() => toast.remove(), 5000);
   }
 
   // ==================== MUTATION OBSERVER ====================
   function setupMutationObserver() {
     const observer = new MutationObserver((mutations) => {
       let shouldRescrape = false;
-      
+
       mutations.forEach(mutation => {
-        // Check if significant content changed
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
           mutation.addedNodes.forEach(node => {
             if (node.nodeType === Node.ELEMENT_NODE) {
               const text = node.textContent || '';
-              // If new content contains sales/royalty data indicators
-              if (text.match(/\$[\d,.]+/) || text.match(/\d+\s*unit/i)) {
+              // Detect if new sales data appeared
+              if (text.match(/Purchased|Royalt|USD|EUR|GBP/i)) {
                 shouldRescrape = true;
               }
             }
@@ -405,7 +609,6 @@
       });
 
       if (shouldRescrape) {
-        // Debounce re-scraping
         clearTimeout(window._gastcaRescrapeTimeout);
         window._gastcaRescrapeTimeout = setTimeout(scrapeAllData, 2000);
       }
@@ -413,8 +616,7 @@
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true,
-      characterData: true
+      subtree: true
     });
   }
 
@@ -426,10 +628,29 @@
         return true;
 
       case 'GET_STATUS':
-        sendResponse({
-          isRunning: isRunning,
-          lastScrape: Date.now()
-        });
+        sendResponse({ isRunning, page: detectCurrentPage() });
+        break;
+
+      case 'SCRAPE_ANALYZE':
+        const analyzeData = scrapeAnalyzePage();
+        sendResponse(analyzeData);
+        break;
+
+      case 'SCRAPE_MANAGE':
+        const manageData = scrapeManagePage();
+        sendResponse(manageData);
+        break;
+
+      case 'PLAY_SOUND':
+        // Play cha-ching sound in page context
+        try {
+          const audio = new Audio(chrome.runtime.getURL('assets/sounds/cha-ching.mp3'));
+          audio.volume = 0.7;
+          audio.play();
+        } catch (e) {
+          console.log('[GAsTCA] Audio play failed:', e);
+        }
+        sendResponse({ success: true });
         break;
 
       case 'UPDATE_INTERVAL':
@@ -442,14 +663,19 @@
         if (scrapeTimer) clearInterval(scrapeTimer);
         sendResponse({ success: true });
         break;
-
-      case 'START_SCRAPING':
-        isRunning = true;
-        startScraping();
-        sendResponse({ success: true });
-        break;
     }
   }
+
+  // ==================== AUTO-DETECT PAGE CHANGES ====================
+  // MBA is a SPA-like app, detect tab navigation
+  let lastUrl = location.href;
+  setInterval(() => {
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+      console.log('[GAsTCA] Page changed, re-scraping...');
+      setTimeout(scrapeAllData, 1500);
+    }
+  }, 1000);
 
   // ==================== START ====================
   init();

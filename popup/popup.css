@@ -2,7 +2,7 @@
 
 body {
   width: 380px;
-  min-height: 520px;
+  min-height: 560px;
   overflow-x: hidden;
 }
 
@@ -287,4 +287,70 @@ body {
 .popup-footer span {
   font-size: 10px;
   color: var(--text-muted);
+}
+
+
+
+/* Account Bar */
+.account-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.account-tier {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  background: var(--accent-gold-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.account-designs, .account-products {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Marketplace Section */
+.marketplace-section {
+  padding: 12px 20px;
+}
+
+.marketplace-grid {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.marketplace-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  flex: 1;
+}
+
+.marketplace-item .mp-flag {
+  font-size: 18px;
+}
+
+.marketplace-item .mp-units {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Sale item with flag */
+.sale-item .sale-flag {
+  font-size: 14px;
+  flex-shrink: 0;
 }
