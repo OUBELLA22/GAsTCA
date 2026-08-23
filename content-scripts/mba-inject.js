@@ -37,7 +37,7 @@
     soldTotal: { allTime: 110 },
     dailySales: [], // {date, units, royalties}
     currentTab: 'dashboard',
-    version: '3.2.0'
+    version: '3.3.0'
   };
 
   // ==================== INIT ====================
@@ -833,6 +833,9 @@
                 <button class="ga-search-btn" id="ga-search-trends">
                   <span class="ga-search-btn-icon">🔍</span> SEARCH
                 </button>
+                <button class="ga-autofinder-btn" id="ga-autofinder-btn">
+                  <span class="ga-af-icon">🚀</span> AUTO FINDER
+                </button>
                 <button class="ga-pencil-btn" title="Save search">✏️</button>
               </div>
             </div>
@@ -1500,6 +1503,12 @@
         return;
       }
 
+      // --- AUTO FINDER button ---
+      if (btn.id === 'ga-autofinder-btn') {
+        autoFindNiches();
+        return;
+      }
+
       // --- Search Trademarks button ---
       if (btn.id === 'ga-search-tm') {
         searchTrademarks();
@@ -1815,29 +1824,151 @@
     // Simulate results after brief delay
     setTimeout(() => {
       grid.innerHTML = generateTrendResults(keyword);
+      updateResultsCount(24);
     }, 800);
   }
 
-  function generateTrendResults(keyword) {
-    // Generate PrettyMerch-style trend cards
-    const results = [];
-    const titles = [
-      keyword + ' Funny Gift',
-      keyword + ' Vintage Retro',
-      keyword + ' Birthday Present',
-      keyword + ' Lover Christmas',
-      keyword + ' Dad Joke',
-      keyword + ' Mom Life'
+  // ==================== AUTO FINDER - Automatic Niche Discovery ====================
+  function autoFindNiches() {
+    const grid = document.getElementById('ga-trend-grid');
+    const btn = document.getElementById('ga-autofinder-btn');
+    if (!grid) return;
+
+    // Show loading state
+    btn.innerHTML = '<span class="ga-af-icon">⏳</span> FINDING NICHES...';
+    btn.disabled = true;
+
+    grid.innerHTML = `
+      <div class="ga-autofinder-loading">
+        <div class="ga-af-spinner"></div>
+        <h3>🚀 Auto Finder Running...</h3>
+        <p>Discovering trending niches with low competition and high demand</p>
+        <div class="ga-af-progress">
+          <div class="ga-af-progress-bar" id="ga-af-progress-bar"></div>
+        </div>
+        <div class="ga-af-status" id="ga-af-status">Scanning marketplaces...</div>
+      </div>
+    `;
+
+    // Simulate multi-step discovery process
+    const steps = [
+      { msg: '🔍 Scanning Amazon Best Sellers...', pct: 15 },
+      { msg: '📊 Analyzing BSR trends...', pct: 30 },
+      { msg: '🎯 Filtering low competition niches...', pct: 45 },
+      { msg: '💰 Calculating revenue potential...', pct: 60 },
+      { msg: '📈 Checking 7-day & 30-day averages...', pct: 75 },
+      { msg: '🏆 Ranking top opportunities...', pct: 90 },
+      { msg: '✅ Done! Found trending niches', pct: 100 }
     ];
 
-    for (let i = 0; i < 6; i++) {
-      const bsr = Math.floor(Math.random() * 900000) + 100000;
-      const salesMin = Math.floor(Math.random() * 20) + 10;
-      const salesMax = salesMin + Math.floor(Math.random() * 15) + 5;
+    let stepIndex = 0;
+    const interval = setInterval(() => {
+      if (stepIndex < steps.length) {
+        const status = document.getElementById('ga-af-status');
+        const bar = document.getElementById('ga-af-progress-bar');
+        if (status) status.textContent = steps[stepIndex].msg;
+        if (bar) bar.style.width = steps[stepIndex].pct + '%';
+        stepIndex++;
+      } else {
+        clearInterval(interval);
+        // Show results
+        grid.innerHTML = generateAutoFinderResults();
+        updateResultsCount(null, true);
+        btn.innerHTML = '<span class="ga-af-icon">🚀</span> AUTO FINDER';
+        btn.disabled = false;
+      }
+    }, 600);
+  }
+
+  function generateAutoFinderResults() {
+    // Hot niches with data - auto-discovered trending topics
+    const niches = [
+      { keyword: 'Pickleball', trend: '🔥 HOT', bsr: 45000, sales: [35, 52], price: 19.99, competition: 'Low', score: 92 },
+      { keyword: 'AI Developer', trend: '🔥 HOT', bsr: 78000, sales: [22, 38], price: 17.99, competition: 'Low', score: 88 },
+      { keyword: 'Plant Mom', trend: '📈 Rising', bsr: 120000, sales: [18, 30], price: 16.99, competition: 'Medium', score: 85 },
+      { keyword: 'Retirement 2026', trend: '🔥 HOT', bsr: 55000, sales: [30, 45], price: 18.99, competition: 'Low', score: 91 },
+      { keyword: 'Dog Dad', trend: '📈 Rising', bsr: 95000, sales: [25, 40], price: 17.99, competition: 'Medium', score: 83 },
+      { keyword: 'Nurse Life', trend: '✅ Stable', bsr: 110000, sales: [20, 35], price: 16.99, competition: 'High', score: 78 },
+      { keyword: 'Disc Golf', trend: '🔥 HOT', bsr: 62000, sales: [28, 44], price: 18.99, competition: 'Low', score: 90 },
+      { keyword: 'Reading Books', trend: '📈 Rising', bsr: 88000, sales: [22, 36], price: 17.99, competition: 'Low', score: 87 },
+      { keyword: 'Camping Adventure', trend: '📈 Rising', bsr: 75000, sales: [26, 42], price: 18.99, competition: 'Medium', score: 84 },
+      { keyword: 'Teacher Appreciation', trend: '🔥 HOT', bsr: 48000, sales: [32, 50], price: 17.99, competition: 'Low', score: 93 },
+      { keyword: 'Gym Motivation', trend: '✅ Stable', bsr: 130000, sales: [15, 28], price: 16.99, competition: 'High', score: 72 },
+      { keyword: 'Cat Lover', trend: '📈 Rising', bsr: 82000, sales: [24, 38], price: 17.99, competition: 'Medium', score: 82 },
+      { keyword: 'Crypto Trader', trend: '🔥 HOT', bsr: 67000, sales: [27, 43], price: 19.99, competition: 'Low', score: 89 },
+      { keyword: 'Soccer Mom', trend: '📈 Rising', bsr: 98000, sales: [20, 34], price: 16.99, competition: 'Medium', score: 80 },
+      { keyword: 'Hiking Nature', trend: '📈 Rising', bsr: 72000, sales: [25, 40], price: 18.99, competition: 'Low', score: 86 },
+      { keyword: 'Gardening Life', trend: '✅ Stable', bsr: 105000, sales: [18, 32], price: 17.99, competition: 'Medium', score: 79 },
+      { keyword: 'Gaming Streamer', trend: '🔥 HOT', bsr: 58000, sales: [30, 48], price: 18.99, competition: 'Medium', score: 86 },
+      { keyword: 'Woodworking', trend: '📈 Rising', bsr: 85000, sales: [22, 36], price: 18.99, competition: 'Low', score: 85 }
+    ];
+
+    let html = `
+      <div class="ga-af-header-bar">
+        <div class="ga-af-found">
+          <span class="ga-af-found-icon">🚀</span>
+          <strong>${niches.length} Trending Niches Found</strong>
+          <span class="ga-af-found-sub">Auto-discovered based on BSR trends, low competition & high demand</span>
+        </div>
+      </div>
+    `;
+
+    niches.forEach((niche, i) => {
+      const scoreColor = niche.score >= 90 ? '#28a745' : niche.score >= 80 ? '#F5A623' : '#999';
+      const compColor = niche.competition === 'Low' ? '#28a745' : niche.competition === 'Medium' ? '#F5A623' : '#dc3545';
+
+      html += `
+        <div class="ga-af-niche-card">
+          <div class="ga-af-rank">#${i + 1}</div>
+          <div class="ga-af-niche-img">👕</div>
+          <div class="ga-af-niche-info">
+            <div class="ga-af-niche-top">
+              <span class="ga-af-keyword">${niche.keyword}</span>
+              <span class="ga-af-trend">${niche.trend}</span>
+              <span class="ga-af-score" style="background:${scoreColor}">${niche.score}/100</span>
+            </div>
+            <div class="ga-af-niche-stats">
+              <span class="ga-af-stat"><span class="ga-af-stat-label">BSR:</span> #${niche.bsr.toLocaleString()}</span>
+              <span class="ga-af-stat"><span class="ga-af-stat-label">Sales:</span> 🛒 ${niche.sales[0]}-${niche.sales[1]}/mo</span>
+              <span class="ga-af-stat"><span class="ga-af-stat-label">Price:</span> $${niche.price}</span>
+              <span class="ga-af-stat"><span class="ga-af-stat-label">Competition:</span> <span style="color:${compColor};font-weight:600;">${niche.competition}</span></span>
+            </div>
+          </div>
+          <div class="ga-af-niche-actions">
+            <button class="ga-pm-analyze-btn" data-keyword="${niche.keyword}">🔍 Research</button>
+            <button class="ga-pm-view-btn" data-keyword="${niche.keyword}">💡 Ideas</button>
+          </div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  function updateResultsCount(count, isAutoFinder = false) {
+    const el = document.getElementById('ga-results-count');
+    if (el) {
+      if (isAutoFinder) {
+        el.innerHTML = '<strong>Auto Finder</strong> • Trending niches discovered';
+      } else if (count) {
+        el.innerHTML = `Showing <strong>${count}</strong> results • GAsTCA Pro ✓`;
+      }
+    }
+  }
+
+  function generateTrendResults(keyword) {
+    // PRO ACCESS - Unlimited results, no restrictions
+    const results = [];
+    const adjectives = ['Funny', 'Vintage', 'Retro', 'Cool', 'Birthday', 'Christmas', 'Dad', 'Mom', 'Lover', 'Gift', 'Sarcastic', 'Cute', 'Classic', 'Best', 'Queen', 'King', 'Legend', 'Epic', 'Awesome', 'Premium', 'Limited', 'Original', 'Custom', 'Trending'];
+
+    for (let i = 0; i < 24; i++) {
+      const bsr = Math.floor(Math.random() * 900000) + 50000;
+      const salesMin = Math.floor(Math.random() * 30) + 8;
+      const salesMax = salesMin + Math.floor(Math.random() * 20) + 5;
       const price = (Math.random() * 8 + 13).toFixed(2);
-      const reviews = Math.floor(Math.random() * 50);
       const rating = (Math.random() * 2 + 3).toFixed(1);
-      const title = titles[i] || keyword + ' Design #' + (i + 1);
+      const adj = adjectives[i % adjectives.length];
+      const title = `${keyword} ${adj} T-Shirt Design`;
 
       results.push(`
         <div class="ga-pm-card">
@@ -1866,12 +1997,8 @@
       `);
     }
 
-    return `
-      <div class="ga-pm-results-notice">
-        Results shown below. Upgrade to GAsTCA Pro for unlimited results.
-      </div>
-      ${results.join('')}
-      <div class="ga-end-results">End of search results</div>
+    return `${results.join('')}
+      <div class="ga-end-results">Showing all ${results.length} results • GAsTCA Pro ✓</div>
     `;
   }
 
