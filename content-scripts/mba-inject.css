@@ -2672,6 +2672,58 @@ body.gastca-active #nav-container {
   flex-shrink: 0;
 }
 
+/* Evidence & Why sections */
+.ga-af-evidence {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: #888;
+}
+
+.ga-af-signal {
+  color: #F5A623;
+  font-weight: 600;
+}
+
+.ga-af-why {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #666;
+  line-height: 1.4;
+  max-width: 600px;
+}
+
+.ga-af-why strong {
+  color: #333;
+}
+
+.ga-af-confidence {
+  font-size: 10px;
+  color: #999;
+  font-style: italic;
+}
+
+.ga-af-footer-note {
+  grid-column: 1 / -1;
+  background: #f9fafb;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-top: 12px;
+}
+
+.ga-af-footer-note p {
+  font-size: 12px;
+  color: #888;
+  margin: 0 0 4px;
+}
+
+.ga-af-footer-note p:last-child {
+  margin-bottom: 0;
+}
+
 /* ==================== SCROLLBAR ==================== */
 #gastca-wrapper ::-webkit-scrollbar {
   width: 6px;
