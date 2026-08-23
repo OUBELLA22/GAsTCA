@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GAsTCA - Merch by Amazon Intelligence",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "All-in-one Merch by Amazon dashboard: real-time sales tracking, niche research, BSR analysis, keyword tools, and trending products.",
   "permissions": [
     "storage",
@@ -36,8 +36,8 @@
   "content_scripts": [
     {
       "matches": ["https://merch.amazon.com/*"],
-      "js": ["content-scripts/mba-scraper.js"],
-      "css": ["content-scripts/mba-overlay.css"],
+      "js": ["libs/chart.min.js", "content-scripts/mba-app.js"],
+      "css": ["content-scripts/mba-app.css"],
       "run_at": "document_idle"
     },
     {
@@ -49,7 +49,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["assets/sounds/cha-ching.mp3", "assets/icons/*"],
+      "resources": ["assets/sounds/cha-ching.mp3", "assets/icons/*", "libs/*"],
       "matches": ["<all_urls>"]
     }
   ]
