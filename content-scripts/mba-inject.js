@@ -37,7 +37,7 @@
     soldTotal: { allTime: 110 },
     dailySales: [], // {date, units, royalties}
     currentTab: 'dashboard',
-    version: '3.1.0'
+    version: '3.2.0'
   };
 
   // ==================== INIT ====================
@@ -721,143 +721,217 @@
   function buildResearchPage() {
     return `
     <div class="ga-page" id="ga-page-research">
-      <!-- Research Sub-tabs -->
-      <div class="ga-sub-tabs">
-        <button class="ga-sub-tab active" data-rtab="trends">🔥 Trend Finder</button>
-        <button class="ga-sub-tab" data-rtab="trademark">™️ Trademark Search</button>
-        <button class="ga-sub-tab" data-rtab="keywords">🔑 Keyword Research</button>
+      <!-- Research Sub-tabs (PrettyMerch style) -->
+      <div class="ga-research-tabs">
+        <button class="ga-research-tab active" data-rtab="trends">
+          <span class="ga-rtab-icon">🔍</span> Trend Finder
+        </button>
+        <button class="ga-research-tab" data-rtab="trademark">
+          <span class="ga-rtab-icon">™</span> Trademark Search
+        </button>
       </div>
 
-      <!-- Trend Finder Panel -->
+      <!-- TREND FINDER PANEL -->
       <div class="ga-research-panel active" id="ga-rpanel-trends">
-        <div class="ga-trend-controls">
-          <div class="ga-trend-row">
-            <input type="text" class="ga-search-input ga-search-lg" id="ga-trend-keyword" 
-                   placeholder="Enter keyword to search trends...">
-            <div class="ga-trend-match">
-              <button class="ga-pill active" data-match="exact">Exact</button>
-              <button class="ga-pill" data-match="close">Close</button>
-              <button class="ga-pill" data-match="partial">Partial</button>
-            </div>
-          </div>
-          <div class="ga-trend-row">
-            <div class="ga-trend-filters">
-              <div class="ga-filter-group">
-                <label>Marketplace:</label>
-                <div class="ga-flag-filters">
-                  <button class="ga-flag-btn active" data-rmp="US">🇺🇸</button>
-                  <button class="ga-flag-btn" data-rmp="UK">🇬🇧</button>
-                  <button class="ga-flag-btn" data-rmp="DE">🇩🇪</button>
-                  <button class="ga-flag-btn" data-rmp="FR">🇫🇷</button>
-                  <button class="ga-flag-btn" data-rmp="IT">🇮🇹</button>
-                  <button class="ga-flag-btn" data-rmp="ES">🇪🇸</button>
-                  <button class="ga-flag-btn" data-rmp="JP">🇯🇵</button>
+        <div class="ga-trend-header">
+          <h3 class="ga-trend-title">TREND FINDER</h3>
+          <p class="ga-trend-subtitle">Discover new and upcoming trends before they go mainstream</p>
+        </div>
+
+        <div class="ga-trend-form">
+          <!-- KEYWORDS ROW -->
+          <div class="ga-form-row">
+            <label class="ga-form-label">KEYWORDS</label>
+            <div class="ga-form-field">
+              <div class="ga-keyword-input-wrap">
+                <span class="ga-search-icon">🔍</span>
+                <input type="text" class="ga-keyword-input" id="ga-trend-keyword" 
+                       placeholder="Enter keyword or ASIN (optional)">
+                <div class="ga-match-dropdown">
+                  <button class="ga-match-btn" id="ga-match-btn">Exact Match ▾</button>
+                  <div class="ga-match-menu" id="ga-match-menu" style="display:none;">
+                    <button class="ga-match-option active" data-match="exact">Exact Match</button>
+                    <button class="ga-match-option" data-match="broad">Broad Match</button>
+                  </div>
                 </div>
+                <span class="ga-esc-hint">ESC to clear</span>
               </div>
-              <div class="ga-filter-group">
-                <label>Product:</label>
-                <select class="ga-select" id="ga-trend-product-type">
-                  <option value="tshirt">T-Shirts</option>
-                  <option value="hoodie">Hoodies</option>
-                  <option value="popsocket">PopSockets</option>
-                  <option value="phonecase">Phone Cases</option>
-                  <option value="totebag">Tote Bags</option>
-                </select>
-              </div>
-              <div class="ga-filter-group">
-                <label>Sort by:</label>
-                <select class="ga-select" id="ga-trend-sort">
-                  <option value="bsr">BSR</option>
-                  <option value="sales">Est. Sales</option>
-                  <option value="bsr_change">BSR Change</option>
-                  <option value="7d_avg">7D Avg</option>
-                  <option value="30d_avg">30D Avg</option>
-                  <option value="reviews">Reviews</option>
-                  <option value="rating">Rating</option>
-                  <option value="date">Date Uploaded</option>
-                </select>
-              </div>
-            </div>
-            <div class="ga-trend-actions">
-              <button class="ga-btn ga-btn-primary" id="ga-search-trends">🔍 Search</button>
-              <div class="ga-view-toggle">
-                <button class="ga-view-btn active" data-view="grid" title="Grid View">⊞</button>
-                <button class="ga-view-btn" data-view="list" title="List View">☰</button>
+              <div class="ga-keyword-type-pills">
+                <button class="ga-ktype-pill active" data-ktype="title">Title Only</button>
+                <button class="ga-ktype-pill" data-ktype="brand">Title, Brand & Bullets</button>
+                <button class="ga-ktype-pill" data-ktype="asin">ASIN</button>
               </div>
             </div>
           </div>
-          <div class="ga-trend-row">
-            <div class="ga-bsr-range">
-              <label>BSR Range: <span id="ga-bsr-min-val">0</span> - <span id="ga-bsr-max-val">10,000,000</span></label>
-              <input type="range" class="ga-range" id="ga-bsr-min" min="0" max="10000000" value="0" step="10000">
-              <input type="range" class="ga-range" id="ga-bsr-max" min="0" max="10000000" value="10000000" step="10000">
+
+          <!-- MARKETPLACE ROW -->
+          <div class="ga-form-row">
+            <label class="ga-form-label">MARKETPLACE</label>
+            <div class="ga-form-field">
+              <div class="ga-mp-pills">
+                <button class="ga-mp-pill active" data-rmp="US"><span class="ga-mp-pill-flag">🇺🇸</span> United States</button>
+                <button class="ga-mp-pill" data-rmp="UK"><span class="ga-mp-pill-flag">🇬🇧</span> United Kingdom</button>
+                <button class="ga-mp-pill" data-rmp="DE"><span class="ga-mp-pill-flag">🇩🇪</span> Germany</button>
+                <button class="ga-mp-pill" data-rmp="FR"><span class="ga-mp-pill-flag">🇫🇷</span> France</button>
+                <button class="ga-mp-pill" data-rmp="IT"><span class="ga-mp-pill-flag">🇮🇹</span> Italy</button>
+                <button class="ga-mp-pill" data-rmp="ES"><span class="ga-mp-pill-flag">🇪🇸</span> Spain</button>
+                <button class="ga-mp-pill" data-rmp="JP"><span class="ga-mp-pill-flag">🇯🇵</span> Japan</button>
+              </div>
             </div>
+          </div>
+
+          <!-- PRODUCT ROW -->
+          <div class="ga-form-row">
+            <label class="ga-form-label">PRODUCT</label>
+            <div class="ga-form-field">
+              <div class="ga-product-pills">
+                <button class="ga-product-pill active" data-ptype="tshirt">T-Shirts</button>
+                <button class="ga-product-pill" data-ptype="hoodie">Pullover Hoodies</button>
+                <button class="ga-product-pill" data-ptype="popsocket">PopSockets</button>
+                <button class="ga-product-pill" data-ptype="phonecase">Phone Cases</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SORT BY ROW -->
+          <div class="ga-form-row">
+            <label class="ga-form-label">SORT BY</label>
+            <div class="ga-form-field">
+              <div class="ga-sort-pills">
+                <button class="ga-sort-pill" data-sort="bsr">BSR ⓘ</button>
+                <button class="ga-sort-pill" data-sort="sales">Sales ⓘ</button>
+                <button class="ga-sort-pill" data-sort="bsr_change">BSR Change ⓘ</button>
+                <button class="ga-sort-pill" data-sort="7d_avg">7D Avg BSR ⓘ</button>
+                <button class="ga-sort-pill" data-sort="30d_avg">30D Avg BSR ⓘ</button>
+                <button class="ga-sort-pill" data-sort="reviews">No of Reviews ⓘ</button>
+                <button class="ga-sort-pill" data-sort="rating">Rating ⓘ</button>
+                <button class="ga-sort-pill active" data-sort="date">Date Uploaded ⓘ</button>
+              </div>
+              <div class="ga-sort-order">
+                <button class="ga-sort-order-btn" id="ga-sort-order-btn">Lowest to Highest ▾</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BSR RANGE ROW -->
+          <div class="ga-form-row">
+            <label class="ga-form-label">BSR RANGE</label>
+            <div class="ga-form-field">
+              <div class="ga-bsr-slider-wrap">
+                <input type="range" class="ga-bsr-slider" id="ga-bsr-min" min="1" max="1000000" value="1" step="1000">
+                <input type="range" class="ga-bsr-slider" id="ga-bsr-max" min="1" max="1000000" value="1000000" step="1000">
+                <span class="ga-bsr-range-text"><span id="ga-bsr-min-val">1</span> - <span id="ga-bsr-max-val">1,000,000</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEARCH BUTTON ROW -->
+          <div class="ga-form-row ga-form-row-center">
+            <label class="ga-form-label"></label>
+            <div class="ga-form-field">
+              <div class="ga-search-actions">
+                <button class="ga-search-btn" id="ga-search-trends">
+                  <span class="ga-search-btn-icon">🔍</span> SEARCH
+                </button>
+                <button class="ga-pencil-btn" title="Save search">✏️</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- MORE FILTERS -->
+          <div class="ga-more-filters-wrap">
+            <button class="ga-more-filters-btn" id="ga-more-filters-btn">▼ More Filters</button>
           </div>
         </div>
 
-        <!-- Trend Results -->
+        <!-- GRID/LIST TOGGLE -->
+        <div class="ga-results-toolbar">
+          <div class="ga-results-count" id="ga-results-count"></div>
+          <div class="ga-grid-list-toggle">
+            <button class="ga-gl-btn active" data-view="grid"><span>⊞</span> Grid</button>
+            <button class="ga-gl-btn" data-view="list"><span>☰</span> List</button>
+          </div>
+        </div>
+
+        <!-- TREND RESULTS GRID -->
         <div class="ga-trend-results" id="ga-trend-results">
           <div class="ga-trend-grid" id="ga-trend-grid">
             <div class="ga-empty-state">
               <span class="ga-empty-icon">🔍</span>
               <h3>Search for trends</h3>
-              <p>Enter a keyword and click Search to find trending products on Amazon</p>
+              <p>Enter a keyword and click SEARCH to discover trending products</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Trademark Search Panel -->
+      <!-- TRADEMARK SEARCH PANEL -->
       <div class="ga-research-panel" id="ga-rpanel-trademark">
+        <div class="ga-trend-header">
+          <h3 class="ga-trend-title">TRADEMARK SEARCH</h3>
+          <p class="ga-trend-subtitle">Check if a keyword is trademarked before using it in your designs</p>
+        </div>
         <div class="ga-tm-controls">
-          <div class="ga-tm-row">
-            <input type="text" class="ga-search-input ga-search-lg" id="ga-tm-keyword" 
-                   placeholder="Enter trademark keyword to search...">
-            <select class="ga-select" id="ga-tm-marketplace">
-              <option value="ALL">🌐 ALL</option>
-              <option value="US">🇺🇸 US</option>
-              <option value="UK">🇬🇧 UK</option>
-              <option value="DE">🇩🇪 DE</option>
-              <option value="FR">🇫🇷 FR</option>
-              <option value="IT">🇮🇹 IT</option>
-              <option value="ES">🇪🇸 ES</option>
-            </select>
-            <select class="ga-select" id="ga-tm-class">
-              <option value="25">Class 25 (Clothing)</option>
-              <option value="9">Class 9 (Electronics)</option>
-              <option value="20">Class 20 (Furniture)</option>
-              <option value="18">Class 18 (Leather goods)</option>
-            </select>
-            <select class="ga-select" id="ga-tm-status">
-              <option value="">All Status</option>
-              <option value="registered">Registered</option>
-              <option value="filed">Filed</option>
-              <option value="dead">Dead</option>
-            </select>
-            <button class="ga-btn ga-btn-primary" id="ga-search-tm">🔍 Search Trademarks</button>
+          <div class="ga-form-row">
+            <label class="ga-form-label">KEYWORD</label>
+            <div class="ga-form-field">
+              <div class="ga-keyword-input-wrap">
+                <span class="ga-search-icon">🔍</span>
+                <input type="text" class="ga-keyword-input" id="ga-tm-keyword" 
+                       placeholder="Enter trademark keyword to search...">
+              </div>
+            </div>
+          </div>
+          <div class="ga-form-row">
+            <label class="ga-form-label">MARKETPLACE</label>
+            <div class="ga-form-field">
+              <div class="ga-mp-pills">
+                <button class="ga-mp-pill active" data-tmp="ALL"><span class="ga-mp-pill-flag">🌐</span> ALL</button>
+                <button class="ga-mp-pill" data-tmp="US"><span class="ga-mp-pill-flag">🇺🇸</span> US</button>
+                <button class="ga-mp-pill" data-tmp="UK"><span class="ga-mp-pill-flag">🇬🇧</span> UK</button>
+                <button class="ga-mp-pill" data-tmp="DE"><span class="ga-mp-pill-flag">🇩🇪</span> DE</button>
+                <button class="ga-mp-pill" data-tmp="FR"><span class="ga-mp-pill-flag">🇫🇷</span> FR</button>
+                <button class="ga-mp-pill" data-tmp="IT"><span class="ga-mp-pill-flag">🇮🇹</span> IT</button>
+                <button class="ga-mp-pill" data-tmp="ES"><span class="ga-mp-pill-flag">🇪🇸</span> ES</button>
+              </div>
+            </div>
+          </div>
+          <div class="ga-form-row">
+            <label class="ga-form-label">NICE CLASS</label>
+            <div class="ga-form-field">
+              <div class="ga-product-pills">
+                <button class="ga-product-pill active" data-class="25">Class 25 (Clothing)</button>
+                <button class="ga-product-pill" data-class="9">Class 9 (Electronics)</button>
+                <button class="ga-product-pill" data-class="20">Class 20 (Furniture)</button>
+                <button class="ga-product-pill" data-class="18">Class 18 (Leather)</button>
+              </div>
+            </div>
+          </div>
+          <div class="ga-form-row">
+            <label class="ga-form-label">STATUS</label>
+            <div class="ga-form-field">
+              <div class="ga-product-pills">
+                <button class="ga-product-pill active" data-tmstatus="all">All</button>
+                <button class="ga-product-pill" data-tmstatus="registered">Registered</button>
+                <button class="ga-product-pill" data-tmstatus="filed">Filed</button>
+                <button class="ga-product-pill" data-tmstatus="dead">Dead</button>
+              </div>
+            </div>
+          </div>
+          <div class="ga-form-row ga-form-row-center">
+            <label class="ga-form-label"></label>
+            <div class="ga-form-field">
+              <button class="ga-search-btn" id="ga-search-tm">
+                <span class="ga-search-btn-icon">🔍</span> SEARCH
+              </button>
+            </div>
           </div>
         </div>
         <div class="ga-tm-results" id="ga-tm-results">
           <div class="ga-empty-state">
             <span class="ga-empty-icon">™️</span>
-            <h3>Trademark Search</h3>
-            <p>Check if a keyword is trademarked before using it in your designs</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Keyword Research Panel -->
-      <div class="ga-research-panel" id="ga-rpanel-keywords">
-        <div class="ga-kw-controls">
-          <input type="text" class="ga-search-input ga-search-lg" id="ga-kw-input" 
-                 placeholder="Enter seed keyword for suggestions...">
-          <button class="ga-btn ga-btn-primary" id="ga-search-kw">🔍 Get Keywords</button>
-        </div>
-        <div class="ga-kw-results" id="ga-kw-results">
-          <div class="ga-empty-state">
-            <span class="ga-empty-icon">🔑</span>
-            <h3>Keyword Research</h3>
-            <p>Enter a seed keyword to get related keyword suggestions with search volume data</p>
+            <h3>Search trademarks</h3>
+            <p>Enter a keyword above and click SEARCH</p>
           </div>
         </div>
       </div>
@@ -1250,8 +1324,8 @@
       }
 
       // --- Research sub-tabs ---
-      if (btn.classList.contains('ga-sub-tab') && btn.dataset.rtab) {
-        wrapper.querySelectorAll('.ga-sub-tab').forEach(b => b.classList.remove('active'));
+      if (btn.classList.contains('ga-sub-tab') && btn.dataset.rtab || btn.classList.contains('ga-research-tab') && btn.dataset.rtab) {
+        wrapper.querySelectorAll('.ga-sub-tab, .ga-research-tab').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         wrapper.querySelectorAll('.ga-research-panel').forEach(p => p.classList.remove('active'));
         const panel = document.getElementById(`ga-rpanel-${btn.dataset.rtab}`);
@@ -1324,6 +1398,93 @@
       // --- Research marketplace filter ---
       if (btn.classList.contains('ga-flag-btn') && btn.dataset.rmp) {
         btn.classList.toggle('active');
+        return;
+      }
+
+      // --- Research marketplace pills (PrettyMerch style) ---
+      if (btn.classList.contains('ga-mp-pill') && (btn.dataset.rmp || btn.dataset.tmp)) {
+        const group = btn.closest('.ga-mp-pills');
+        if (group) {
+          group.querySelectorAll('.ga-mp-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Product type pills ---
+      if (btn.classList.contains('ga-product-pill')) {
+        const group = btn.closest('.ga-product-pills');
+        if (group) {
+          group.querySelectorAll('.ga-product-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Sort pills ---
+      if (btn.classList.contains('ga-sort-pill')) {
+        const group = btn.closest('.ga-sort-pills');
+        if (group) {
+          group.querySelectorAll('.ga-sort-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Keyword type pills (Title Only / Title Brand / ASIN) ---
+      if (btn.classList.contains('ga-ktype-pill')) {
+        const group = btn.closest('.ga-keyword-type-pills');
+        if (group) {
+          group.querySelectorAll('.ga-ktype-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Match dropdown toggle ---
+      if (btn.id === 'ga-match-btn') {
+        const menu = document.getElementById('ga-match-menu');
+        if (menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        return;
+      }
+
+      // --- Match option click ---
+      if (btn.classList.contains('ga-match-option')) {
+        const menu = document.getElementById('ga-match-menu');
+        const matchBtn = document.getElementById('ga-match-btn');
+        if (menu) menu.style.display = 'none';
+        if (matchBtn) matchBtn.textContent = btn.textContent + ' ▾';
+        btn.closest('.ga-match-menu')?.querySelectorAll('.ga-match-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        return;
+      }
+
+      // --- Sort order toggle ---
+      if (btn.id === 'ga-sort-order-btn') {
+        const current = btn.textContent.includes('Lowest') ? 'Highest to Lowest ▾' : 'Lowest to Highest ▾';
+        btn.textContent = current;
+        return;
+      }
+
+      // --- More Filters toggle ---
+      if (btn.id === 'ga-more-filters-btn') {
+        btn.textContent = btn.textContent.includes('▼') ? '▲ Less Filters' : '▼ More Filters';
+        return;
+      }
+
+      // --- Grid/List toggle (research) ---
+      if (btn.classList.contains('ga-gl-btn')) {
+        const group = btn.closest('.ga-grid-list-toggle');
+        if (group) {
+          group.querySelectorAll('.ga-gl-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Pencil/Save button ---
+      if (btn.classList.contains('ga-pencil-btn')) {
+        alert('Search saved!');
         return;
       }
 
@@ -1658,34 +1819,60 @@
   }
 
   function generateTrendResults(keyword) {
-    // Generate sample trend cards
+    // Generate PrettyMerch-style trend cards
     const results = [];
-    for (let i = 0; i < 12; i++) {
-      const bsr = Math.floor(Math.random() * 500000) + 10000;
-      const sales = Math.floor(Math.random() * 50) + 1;
-      const price = (Math.random() * 15 + 13).toFixed(2);
+    const titles = [
+      keyword + ' Funny Gift',
+      keyword + ' Vintage Retro',
+      keyword + ' Birthday Present',
+      keyword + ' Lover Christmas',
+      keyword + ' Dad Joke',
+      keyword + ' Mom Life'
+    ];
+
+    for (let i = 0; i < 6; i++) {
+      const bsr = Math.floor(Math.random() * 900000) + 100000;
+      const salesMin = Math.floor(Math.random() * 20) + 10;
+      const salesMax = salesMin + Math.floor(Math.random() * 15) + 5;
+      const price = (Math.random() * 8 + 13).toFixed(2);
+      const reviews = Math.floor(Math.random() * 50);
+      const rating = (Math.random() * 2 + 3).toFixed(1);
+      const title = titles[i] || keyword + ' Design #' + (i + 1);
+
       results.push(`
-        <div class="ga-trend-card">
-          <div class="ga-trend-card-img">👕</div>
-          <div class="ga-trend-card-info">
-            <div class="ga-trend-card-title">${keyword} Design #${i + 1}</div>
-            <div class="ga-trend-card-meta">
-              <span class="ga-trend-bsr">BSR: ${bsr.toLocaleString()}</span>
-              <span class="ga-trend-sales">~${sales} sales/mo</span>
+        <div class="ga-pm-card">
+          <div class="ga-pm-card-img">
+            <div class="ga-pm-card-placeholder">👕</div>
+            <div class="ga-pm-card-buttons">
+              <button class="ga-pm-analyze-btn">🔍 Analyze</button>
+              <button class="ga-pm-view-btn">👁️ View</button>
             </div>
-            <div class="ga-trend-card-meta">
-              <span class="ga-trend-price">$${price}</span>
-              <span class="ga-trend-reviews">★ ${(Math.random() * 2 + 3).toFixed(1)} (${Math.floor(Math.random() * 50)})</span>
+          </div>
+          <div class="ga-pm-card-body">
+            <div class="ga-pm-card-title" title="${title}">${title.length > 30 ? title.substring(0, 30) + '...' : title}</div>
+            <div class="ga-pm-card-stats">
+              <span class="ga-pm-bsr-badge">#${bsr.toLocaleString()}</span>
+              <span class="ga-pm-na">N/A</span>
             </div>
-            <div class="ga-trend-card-actions">
-              <button class="ga-btn ga-btn-sm ga-btn-primary">Analyze</button>
-              <button class="ga-btn ga-btn-sm ga-btn-outline">View</button>
+            <div class="ga-pm-card-stats">
+              <span class="ga-pm-sales">🛒 ${salesMin} - ${salesMax}</span>
+              <span class="ga-pm-price">$${price}</span>
+            </div>
+            <div class="ga-pm-card-stars">
+              ${'★'.repeat(Math.floor(rating))}${'☆'.repeat(5 - Math.floor(rating))}
             </div>
           </div>
         </div>
       `);
     }
-    return results.join('');
+
+    return `
+      <div class="ga-pm-results-notice">
+        Results shown below. Upgrade to GAsTCA Pro for unlimited results.
+      </div>
+      ${results.join('')}
+      <div class="ga-end-results">End of search results</div>
+    `;
   }
 
   // ==================== SEARCH TRADEMARKS ====================

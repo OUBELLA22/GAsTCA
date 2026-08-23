@@ -1350,7 +1350,7 @@
   margin-left: 8px;
 }
 
-/* ==================== RESEARCH PAGE ==================== */
+/* ==================== RESEARCH PAGE (legacy - kept for compatibility) ==================== */
 .ga-sub-tabs {
   display: flex;
   gap: 0;
@@ -1389,123 +1389,23 @@
   display: block;
 }
 
-.ga-trend-controls {
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  padding: 16px 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-
-.ga-trend-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.ga-trend-row:last-child {
-  margin-bottom: 0;
-}
-
-.ga-trend-match {
-  display: flex;
-  gap: 4px;
-}
-
-.ga-trend-filters {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-  flex: 1;
-}
-
-.ga-trend-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.ga-view-toggle {
-  display: flex;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.ga-view-btn {
-  padding: 6px 10px;
-  font-size: 14px;
-  background: #fff;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.ga-view-btn:first-child {
-  border-right: 1px solid #e0e0e0;
-}
-
-.ga-view-btn.active {
-  background: #F5A623;
-  color: #fff;
-}
-
-.ga-bsr-range {
-  flex: 1;
-}
-
-.ga-bsr-range label {
-  display: block;
-  font-size: 11px;
-  color: #888;
-  margin-bottom: 4px;
-}
-
-.ga-range {
-  width: 48%;
-  margin-right: 2%;
-  accent-color: #F5A623;
-}
-
-/* Trend Results Grid */
 .ga-trend-results {
   min-height: 300px;
 }
 
 .ga-trend-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
 }
 
-/* Trademark */
+/* Trademark (legacy kept for old panel) */
 .ga-tm-controls {
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  padding: 16px 20px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
-.ga-tm-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.ga-tm-results, .ga-kw-results {
+.ga-tm-results {
   min-height: 200px;
-}
-
-.ga-kw-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
 }
 
 /* ==================== DESIGNS PAGE ==================== */
@@ -1933,6 +1833,627 @@ body.gastca-active #nav-container {
     flex: none;
     width: 50%;
   }
+}
+
+/* ==================== RESEARCH PAGE (PrettyMerch Style) ==================== */
+.ga-research-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ga-research-tab {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ga-research-tab:hover {
+  border-color: #F5A623;
+  color: #F5A623;
+}
+
+.ga-research-tab.active {
+  background: #2196F3;
+  border-color: #2196F3;
+  color: #fff;
+}
+
+.ga-rtab-icon {
+  font-size: 14px;
+}
+
+.ga-trend-header {
+  margin-bottom: 16px;
+}
+
+.ga-trend-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 4px;
+}
+
+.ga-trend-subtitle {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+/* Form Layout (like PrettyMerch) */
+.ga-trend-form {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-form-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.ga-form-row:last-child {
+  margin-bottom: 0;
+}
+
+.ga-form-row-center {
+  justify-content: flex-start;
+}
+
+.ga-form-label {
+  width: 110px;
+  min-width: 110px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  padding-top: 8px;
+  letter-spacing: 0.3px;
+}
+
+.ga-form-field {
+  flex: 1;
+}
+
+/* Keyword Input (PrettyMerch style) */
+.ga-keyword-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 0 12px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.ga-keyword-input-wrap:focus-within {
+  border-color: #F5A623;
+  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.1);
+}
+
+.ga-search-icon {
+  font-size: 14px;
+  color: #aaa;
+  margin-right: 8px;
+}
+
+.ga-keyword-input {
+  flex: 1;
+  border: none;
+  padding: 10px 0;
+  font-size: 14px;
+  outline: none;
+  background: transparent;
+}
+
+.ga-match-dropdown {
+  position: relative;
+}
+
+.ga-match-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ga-match-btn:hover {
+  background: #eee;
+}
+
+.ga-match-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.ga-match-option {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #555;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ga-match-option:hover {
+  background: #f5f5f5;
+}
+
+.ga-match-option.active {
+  background: #FFF8E7;
+  color: #F5A623;
+  font-weight: 600;
+}
+
+.ga-esc-hint {
+  font-size: 11px;
+  color: #ccc;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* Keyword Type Pills */
+.ga-keyword-type-pills {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.ga-ktype-pill {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-ktype-pill:hover {
+  border-color: #333;
+}
+
+.ga-ktype-pill.active {
+  background: #333;
+  border-color: #333;
+  color: #fff;
+}
+
+/* Marketplace Pills (with flag + country name) */
+.ga-mp-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ga-mp-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-mp-pill:hover {
+  border-color: #F5A623;
+}
+
+.ga-mp-pill.active {
+  background: #FFF8E7;
+  border-color: #F5A623;
+  color: #F5A623;
+  font-weight: 600;
+}
+
+.ga-mp-pill-flag {
+  font-size: 14px;
+}
+
+/* Product Type Pills */
+.ga-product-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ga-product-pill {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-product-pill:hover {
+  border-color: #2196F3;
+}
+
+.ga-product-pill.active {
+  background: #2196F3;
+  border-color: #2196F3;
+  color: #fff;
+}
+
+/* Sort Pills */
+.ga-sort-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.ga-sort-pill {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #666;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-sort-pill:hover {
+  border-color: #F5A623;
+}
+
+.ga-sort-pill.active {
+  background: #FFF8E7;
+  border-color: #F5A623;
+  color: #F5A623;
+  font-weight: 600;
+}
+
+.ga-sort-order {
+  display: inline-block;
+}
+
+.ga-sort-order-btn {
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #555;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ga-sort-order-btn:hover {
+  border-color: #333;
+}
+
+/* BSR Range Slider */
+.ga-bsr-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ga-bsr-slider {
+  flex: 1;
+  accent-color: #2196F3;
+  height: 4px;
+}
+
+.ga-bsr-range-text {
+  font-size: 13px;
+  color: #555;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+/* Search Button (blue like PrettyMerch) */
+.ga-search-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ga-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #2196F3;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-search-btn:hover {
+  background: #1976D2;
+}
+
+.ga-search-btn-icon {
+  font-size: 14px;
+}
+
+.ga-pencil-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-pencil-btn:hover {
+  border-color: #333;
+}
+
+/* More Filters */
+.ga-more-filters-wrap {
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 12px;
+}
+
+.ga-more-filters-btn {
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ga-more-filters-btn:hover {
+  border-color: #555;
+  color: #555;
+}
+
+/* Results Toolbar (Grid/List) */
+.ga-results-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ga-results-count {
+  font-size: 12px;
+  color: #888;
+}
+
+.ga-grid-list-toggle {
+  display: flex;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ga-gl-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  background: #fff;
+  border: none;
+  border-right: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ga-gl-btn:last-child {
+  border-right: none;
+}
+
+.ga-gl-btn.active {
+  background: #2196F3;
+  color: #fff;
+}
+
+/* PrettyMerch-Style Product Cards */
+.ga-pm-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-pm-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.ga-pm-card-img {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ga-pm-card-placeholder {
+  font-size: 64px;
+  opacity: 0.3;
+}
+
+.ga-pm-card-buttons {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.ga-pm-card:hover .ga-pm-card-buttons {
+  opacity: 1;
+}
+
+.ga-pm-analyze-btn {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #28a745;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ga-pm-analyze-btn:hover {
+  background: #218838;
+}
+
+.ga-pm-view-btn {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: #F5A623;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ga-pm-view-btn:hover {
+  background: #E09100;
+}
+
+.ga-pm-card-body {
+  padding: 10px 12px;
+}
+
+.ga-pm-card-title {
+  font-size: 12px;
+  color: #333;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ga-pm-card-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.ga-pm-bsr-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  background: #dc3545;
+  color: #fff;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ga-pm-na {
+  font-size: 11px;
+  color: #ccc;
+}
+
+.ga-pm-sales {
+  font-size: 11px;
+  color: #555;
+}
+
+.ga-pm-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.ga-pm-card-stars {
+  color: #ccc;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.ga-pm-card-stars .filled {
+  color: #FFD700;
+}
+
+/* Results Notice */
+.ga-pm-results-notice {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 10px 16px;
+  background: #FFF8E7;
+  border: 1px solid #F5D78E;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #C88B1A;
+  margin-bottom: 12px;
+}
+
+.ga-end-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+  color: #ccc;
 }
 
 /* ==================== SCROLLBAR ==================== */
