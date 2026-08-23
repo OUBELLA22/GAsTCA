@@ -1,0 +1,56 @@
+{
+  "manifest_version": 3,
+  "name": "GAsTCA - Merch by Amazon Intelligence",
+  "version": "1.0.0",
+  "description": "All-in-one Merch by Amazon dashboard: real-time sales tracking, niche research, BSR analysis, keyword tools, and trending products.",
+  "permissions": [
+    "storage",
+    "notifications",
+    "alarms",
+    "activeTab",
+    "tabs",
+    "offscreen",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://merch.amazon.com/*",
+    "https://www.amazon.com/*",
+    "https://amazon.com/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://merch.amazon.com/*"],
+      "js": ["content-scripts/mba-scraper.js"],
+      "css": ["content-scripts/mba-overlay.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.amazon.com/*"],
+      "js": ["content-scripts/amazon-overlay.js"],
+      "css": ["content-scripts/amazon-overlay.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/sounds/cha-ching.mp3", "assets/icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

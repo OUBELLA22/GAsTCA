@@ -1,0 +1,265 @@
+/* GAsTCA - Amazon Page Overlay Styles */
+
+/* Search Result Badge */
+.gastca-overlay {
+  margin-top: 8px;
+}
+
+.gastca-search-badge {
+  background: #1A1A1A;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.gastca-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.gastca-mini-logo {
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, #F5A623, #C8860A);
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 10px;
+  color: #000;
+}
+
+.gastca-badge-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #F5A623;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gastca-badge-stats {
+  display: flex;
+  gap: 12px;
+}
+
+.gastca-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gastca-stat-label {
+  font-size: 9px;
+  color: #6B6B6B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gastca-stat-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.gastca-stat-value.low {
+  color: #4CAF50;
+}
+
+.gastca-stat-value.med {
+  color: #FF9800;
+}
+
+.gastca-stat-value.high {
+  color: #F44336;
+}
+
+/* Product Page Panel */
+.gastca-product-panel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 300px;
+  background: #1A1A1A;
+  border: 1px solid #333;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  animation: gastca-panelSlide 0.3s ease;
+}
+
+@keyframes gastca-panelSlide {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.gastca-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #252525;
+  border-bottom: 1px solid #333;
+}
+
+.gastca-panel-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #F5A623;
+}
+
+.gastca-panel-close {
+  background: none;
+  border: none;
+  color: #6B6B6B;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.gastca-panel-close:hover {
+  background: #333;
+  color: #fff;
+}
+
+.gastca-panel-body {
+  padding: 16px;
+}
+
+.gastca-panel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gastca-panel-row:last-of-type {
+  border-bottom: none;
+}
+
+.gastca-panel-label {
+  font-size: 12px;
+  color: #6B6B6B;
+}
+
+.gastca-panel-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.gastca-panel-value.highlight {
+  color: #F5A623;
+}
+
+.gastca-panel-value.low {
+  color: #4CAF50;
+}
+
+.gastca-panel-value.med {
+  color: #FF9800;
+}
+
+.gastca-panel-value.high {
+  color: #F44336;
+}
+
+.gastca-panel-divider {
+  height: 1px;
+  background: #333;
+  margin: 10px 0;
+}
+
+.gastca-track-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 12px;
+  background: #F5A623;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.gastca-track-btn:hover {
+  background: #FFD700;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+
+/* Floating Badge */
+.gastca-floating-badge {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #1A1A1A;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  z-index: 99998;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.gastca-floating-badge:hover {
+  border-color: #F5A623;
+  box-shadow: 0 4px 16px rgba(245, 166, 35, 0.2);
+  transform: translateY(-2px);
+}
+
+.gastca-badge-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: #B0B0B0;
+}
+
+.gastca-sync-indicator {
+  width: 6px;
+  height: 6px;
+  background: #4CAF50;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #4CAF50;
+  animation: gastca-syncPulse 2s infinite;
+}
+
+@keyframes gastca-syncPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Best Sellers Rank Badge */
+.gastca-rank-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(26, 26, 26, 0.9);
+  border: 1px solid #F5A623;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #F5A623;
+  z-index: 100;
+}
