@@ -1,0 +1,784 @@
+/* GAsTCA - Injected Styles (PrettyMerch-style injection into MBA page) */
+
+/* ==================== GASTCA WRAPPER (injected inside MBA) ==================== */
+#gastca-wrapper {
+  position: relative;
+  padding: 20px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#gastca-wrapper * {
+  box-sizing: border-box;
+}
+
+/* ==================== HEADER ROW ==================== */
+#gastca-wrapper .ga-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+#gastca-wrapper .ga-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#gastca-wrapper .ga-logo {
+  height: 40px;
+}
+
+#gastca-wrapper .ga-logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #F5A623;
+  letter-spacing: 1px;
+}
+
+#gastca-wrapper .ga-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Marketplace Flags */
+#gastca-wrapper .ga-flag-container {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+#gastca-wrapper .ga-flag {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  background: #fff;
+}
+
+#gastca-wrapper .ga-flag:hover {
+  border-color: #F5A623;
+  transform: scale(1.1);
+}
+
+#gastca-wrapper .ga-flag.active {
+  border-color: #F5A623;
+  box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.2);
+}
+
+#gastca-wrapper .ga-flag.has-sales {
+  border-color: #28a745;
+}
+
+#gastca-wrapper .ga-flag .ga-sales-number {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  color: #333;
+  background: #fff;
+  padding: 0 3px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  line-height: 14px;
+}
+
+#gastca-wrapper .ga-flag .ga-sales-number.has-sales {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+/* Header Stats (Tier, REJ, UR, PS) */
+#gastca-wrapper .ga-header-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-left: 20px;
+}
+
+#gastca-wrapper .ga-header-stat {
+  text-align: center;
+}
+
+#gastca-wrapper .ga-header-stat .number {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+#gastca-wrapper .ga-header-stat .title {
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+#gastca-wrapper .ga-tier {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 15px;
+}
+
+#gastca-wrapper .ga-tier .number {
+  font-size: 18px;
+  font-weight: 800;
+  color: #F5A623;
+}
+
+#gastca-wrapper .ga-tier .title {
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+/* ==================== NAV TABS (injected into MBA nav) ==================== */
+.nav-tabs .nav-item .nav-link.ga-tab-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #555;
+  font-weight: 500;
+  border: none;
+  padding: 10px 16px;
+  transition: all 0.2s;
+}
+
+.nav-tabs .nav-item .nav-link.ga-tab-link:hover {
+  color: #F5A623;
+}
+
+.nav-tabs .nav-item .nav-link.ga-tab-link.active {
+  color: #F5A623;
+  border-bottom: 2px solid #F5A623;
+  background: none;
+}
+
+.nav-tabs .nav-item .nav-link.ga-tab-link img {
+  width: 15px;
+  height: 15px;
+}
+
+/* ==================== TOP STATS ROW ==================== */
+#gastca-wrapper .ga-top-stats {
+  display: flex;
+  gap: 0;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+#gastca-wrapper .ga-top-stat {
+  flex: 1;
+  padding: 14px 18px;
+  border-right: 1px solid #eee;
+}
+
+#gastca-wrapper .ga-top-stat:last-child {
+  border-right: none;
+}
+
+#gastca-wrapper .ga-top-stat .title {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+#gastca-wrapper .ga-top-stat .progress-text {
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+#gastca-wrapper .ga-top-stat .progress-text .used {
+  font-weight: 700;
+}
+
+#gastca-wrapper .ga-top-stat .progress-percent {
+  color: #999;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+#gastca-wrapper .ga-top-stat .progress {
+  height: 6px;
+  border-radius: 3px;
+  background: #eee;
+  overflow: hidden;
+}
+
+#gastca-wrapper .ga-top-stat .progress-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* ==================== DASHBOARD LAYOUT ==================== */
+#gastca-wrapper .ga-dash-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* Today's Sales Card */
+#gastca-wrapper .ga-today-card {
+  width: 320px;
+  min-width: 320px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+#gastca-wrapper .ga-today-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+#gastca-wrapper .ga-today-subtitle {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+#gastca-wrapper .ga-today-number {
+  font-size: 64px;
+  font-weight: 800;
+  color: #F5A623;
+  line-height: 1;
+  margin: 16px 0;
+}
+
+#gastca-wrapper .ga-today-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+#gastca-wrapper .ga-today-stat {
+  text-align: center;
+}
+
+#gastca-wrapper .ga-today-stat .value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+#gastca-wrapper .ga-today-stat .label {
+  font-size: 11px;
+  color: #999;
+}
+
+/* Chart Card */
+#gastca-wrapper .ga-chart-card {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+  min-height: 280px;
+}
+
+#gastca-wrapper .ga-chart-card canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ==================== PERIOD CARDS ==================== */
+#gastca-wrapper .ga-periods-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+}
+
+#gastca-wrapper .ga-periods-left {
+  width: 50%;
+  padding-right: 10px;
+}
+
+#gastca-wrapper .ga-periods-right {
+  width: 50%;
+  padding-left: 10px;
+}
+
+#gastca-wrapper .ga-periods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#gastca-wrapper .ga-period-card {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+
+#gastca-wrapper .ga-period-card:nth-child(even) {
+  border-right: none;
+}
+
+#gastca-wrapper .ga-period-card:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+#gastca-wrapper .ga-period-card.full-width {
+  grid-column: 1 / -1;
+  border-right: none;
+}
+
+#gastca-wrapper .ga-period-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+#gastca-wrapper .ga-period-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+#gastca-wrapper .ga-period-date {
+  font-size: 11px;
+  color: #aaa;
+}
+
+#gastca-wrapper .ga-period-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+#gastca-wrapper .ga-period-royalty {
+  font-size: 13px;
+  font-weight: 600;
+  color: #28a745;
+  margin-bottom: 4px;
+}
+
+#gastca-wrapper .ga-period-meta {
+  font-size: 11px;
+  color: #aaa;
+}
+
+#gastca-wrapper .ga-period-ad {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+#gastca-wrapper .ga-period-ad .ad-label {
+  font-weight: 600;
+  color: #bbb;
+  margin-right: 3px;
+}
+
+/* ==================== TODAY'S SALES LIST ==================== */
+#gastca-wrapper .ga-sales-panel {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#gastca-wrapper .ga-panel-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  padding: 0 16px;
+}
+
+#gastca-wrapper .ga-panel-tab {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+#gastca-wrapper .ga-panel-tab:hover {
+  color: #333;
+}
+
+#gastca-wrapper .ga-panel-tab.active {
+  color: #28a745;
+  border-bottom-color: #28a745;
+  font-weight: 600;
+}
+
+#gastca-wrapper .ga-panel-body {
+  padding: 16px;
+  min-height: 300px;
+}
+
+#gastca-wrapper .ga-no-sales {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+#gastca-wrapper .ga-no-sales .title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+#gastca-wrapper .ga-no-sales .text {
+  font-size: 14px;
+  color: #888;
+}
+
+/* ==================== PRODUCTS TABLE ==================== */
+#gastca-wrapper .ga-products-container {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#gastca-wrapper .ga-products-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eee;
+}
+
+#gastca-wrapper .ga-products-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+#gastca-wrapper .ga-search-input {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  width: 280px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#gastca-wrapper .ga-search-input:focus {
+  border-color: #F5A623;
+}
+
+#gastca-wrapper .ga-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#gastca-wrapper .ga-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
+}
+
+#gastca-wrapper .ga-table td {
+  padding: 10px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid #f5f5f5;
+  color: #333;
+  vertical-align: middle;
+}
+
+#gastca-wrapper .ga-table tr:hover td {
+  background: #f9f9f9;
+}
+
+#gastca-wrapper .ga-table .product-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #eee;
+}
+
+#gastca-wrapper .ga-table .product-title a {
+  color: #0066c0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#gastca-wrapper .ga-table .product-title a:hover {
+  text-decoration: underline;
+  color: #c45500;
+}
+
+#gastca-wrapper .ga-table .product-brand {
+  font-size: 11px;
+  color: #999;
+  margin-top: 2px;
+}
+
+#gastca-wrapper .ga-table .product-asin {
+  font-size: 11px;
+  color: #bbb;
+  font-family: monospace;
+}
+
+#gastca-wrapper .ga-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+#gastca-wrapper .ga-badge-live {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+#gastca-wrapper .ga-badge-auto {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+#gastca-wrapper .ga-badge-review {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+#gastca-wrapper .ga-badge-rejected {
+  background: #fbe9e7;
+  color: #c62828;
+}
+
+#gastca-wrapper .ga-badge-timed-out {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+#gastca-wrapper .ga-has-sales {
+  color: #28a745;
+  font-weight: 600;
+}
+
+#gastca-wrapper .ga-bsr-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #e3f2fd;
+  color: #1565c0;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ==================== STATS PAGE ==================== */
+#gastca-wrapper .ga-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+#gastca-wrapper .ga-stat-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+#gastca-wrapper .ga-stat-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+#gastca-wrapper .ga-stat-card canvas {
+  width: 100% !important;
+  height: 200px !important;
+}
+
+/* ==================== WINNERS ==================== */
+#gastca-wrapper .ga-winners-list {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#gastca-wrapper .ga-winner-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.2s;
+}
+
+#gastca-wrapper .ga-winner-item:hover {
+  background: #f9f9f9;
+}
+
+#gastca-wrapper .ga-winner-item:last-child {
+  border-bottom: none;
+}
+
+#gastca-wrapper .ga-winner-rank {
+  font-size: 18px;
+  font-weight: 800;
+  color: #F5A623;
+  min-width: 30px;
+}
+
+#gastca-wrapper .ga-winner-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #eee;
+}
+
+#gastca-wrapper .ga-winner-info {
+  flex: 1;
+}
+
+#gastca-wrapper .ga-winner-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+#gastca-wrapper .ga-winner-meta {
+  font-size: 11px;
+  color: #999;
+  margin-top: 2px;
+}
+
+#gastca-wrapper .ga-winner-sales {
+  font-size: 16px;
+  font-weight: 700;
+  color: #28a745;
+}
+
+/* ==================== HIDDEN PAGE SECTIONS ==================== */
+#gastca-wrapper .ga-page {
+  display: none;
+}
+
+#gastca-wrapper .ga-page.active {
+  display: block;
+}
+
+/* ==================== EMPTY STATE ==================== */
+#gastca-wrapper .ga-empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: #888;
+}
+
+#gastca-wrapper .ga-empty-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+#gastca-wrapper .ga-empty h3 {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+#gastca-wrapper .ga-empty p {
+  font-size: 13px;
+  color: #999;
+}
+
+/* ==================== FOOTER ==================== */
+#gastca-wrapper .ga-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  color: #999;
+}
+
+#gastca-wrapper .ga-footer a {
+  color: #F5A623;
+  text-decoration: none;
+}
+
+/* ==================== PAGINATION ==================== */
+#gastca-wrapper .ga-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-top: 1px solid #eee;
+}
+
+#gastca-wrapper .ga-pagination-info {
+  font-size: 12px;
+  color: #888;
+}
+
+#gastca-wrapper .ga-pagination-controls {
+  display: flex;
+  gap: 6px;
+}
+
+#gastca-wrapper .ga-pagination-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#gastca-wrapper .ga-pagination-btn:hover {
+  border-color: #F5A623;
+  color: #F5A623;
+}
+
+#gastca-wrapper .ga-pagination-btn.disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ==================== HIDE ORIGINAL DASHBOARD ==================== */
+body.gastca-active #dashboard-container {
+  display: none !important;
+}
+
+body.gastca-active .app-outlet > ng-component > .container-fluid {
+  display: none !important;
+}
