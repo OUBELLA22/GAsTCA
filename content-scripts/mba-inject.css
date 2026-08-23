@@ -8,10 +8,45 @@
   color: #333;
   line-height: 1.5;
   padding: 0;
+  z-index: 100;
 }
 
 #gastca-wrapper * {
   box-sizing: border-box;
+}
+
+/* Force all interactive elements to be clickable */
+#gastca-wrapper button,
+#gastca-wrapper a,
+#gastca-wrapper input,
+#gastca-wrapper select,
+#gastca-wrapper label,
+#gastca-wrapper .ga-pill,
+#gastca-wrapper .ga-flag-btn,
+#gastca-wrapper .ga-view-btn,
+#gastca-wrapper .ga-toggle-btn,
+#gastca-wrapper .ga-sub-tab,
+#gastca-wrapper .ga-slist-tab,
+#gastca-wrapper .ga-month-btn,
+#gastca-wrapper .ga-pag-btn,
+#gastca-wrapper .ga-pag-num,
+#gastca-wrapper .ga-action-btn,
+#gastca-wrapper .ga-btn,
+#gastca-wrapper .ga-btn-icon {
+  pointer-events: auto !important;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}
+
+#gastca-wrapper input[type="text"],
+#gastca-wrapper input[type="search"],
+#gastca-wrapper select {
+  cursor: text;
+}
+
+#gastca-wrapper select {
+  cursor: pointer;
 }
 
 #gastca-container {
@@ -23,6 +58,12 @@
 /* ==================== NAV TAB STYLING ==================== */
 .nav-tabs .ga-nav-item {
   margin-left: 0;
+  position: relative;
+  z-index: 1000;
+}
+
+.nav-tabs .ga-nav-item * {
+  pointer-events: auto !important;
 }
 
 .nav-tabs .nav-link.ga-tab-link {
@@ -38,7 +79,11 @@
   background: none;
   transition: all 0.2s ease;
   text-decoration: none;
-  cursor: pointer;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1001;
+  user-select: none;
 }
 
 .nav-tabs .nav-link.ga-tab-link:hover {
@@ -1908,4 +1953,189 @@ body.gastca-active #nav-container {
 
 #gastca-wrapper ::-webkit-scrollbar-thumb:hover {
   background: #aaa;
+}
+
+/* ==================== TREND CARDS ==================== */
+.ga-trend-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ga-trend-card:hover {
+  border-color: #F5A623;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.ga-trend-card-img {
+  width: 100%;
+  height: 140px;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.ga-trend-card-info {
+  padding: 12px;
+}
+
+.ga-trend-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ga-trend-card-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: #888;
+}
+
+.ga-trend-bsr {
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.ga-trend-sales {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.ga-trend-price {
+  font-weight: 600;
+  color: #333;
+}
+
+.ga-trend-reviews {
+  color: #F5A623;
+}
+
+.ga-trend-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* ==================== LOADING STATE ==================== */
+.ga-loading {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 14px;
+  color: #888;
+  grid-column: 1 / -1;
+}
+
+/* ==================== TRADEMARK RESULTS ==================== */
+.ga-tm-result-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.ga-tm-result-card.ga-result-safe {
+  border-color: #c8e6c9;
+  background: #f1f8e9;
+}
+
+.ga-tm-result-card.ga-result-danger {
+  border-color: #ffcdd2;
+  background: #fbe9e7;
+}
+
+.ga-tm-status-icon {
+  font-size: 32px;
+}
+
+.ga-tm-result-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px;
+}
+
+.ga-tm-result-info p {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+}
+
+.ga-tm-disclaimer {
+  padding: 12px 16px;
+  background: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #e65100;
+}
+
+.ga-tm-disclaimer p {
+  margin: 0;
+}
+
+/* ==================== KEYWORD RESULTS ==================== */
+.ga-kw-list {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ga-comp-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.ga-comp-low {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.ga-comp-medium {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.ga-comp-high {
+  background: #fbe9e7;
+  color: #c62828;
+}
+
+/* ==================== ACTIVE STATE FEEDBACK ==================== */
+#gastca-wrapper button:active:not(.disabled),
+#gastca-wrapper .ga-pill:active,
+#gastca-wrapper .ga-flag-btn:active,
+#gastca-wrapper .ga-btn:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+/* ==================== FIX MBA ANGULAR OVERLAY ISSUES ==================== */
+body.gastca-active .app-outlet {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure wrapper is above any Angular overlays */
+#gastca-wrapper {
+  isolation: isolate;
 }

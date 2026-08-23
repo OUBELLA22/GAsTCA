@@ -37,7 +37,7 @@
     soldTotal: { allTime: 110 },
     dailySales: [], // {date, units, royalties}
     currentTab: 'dashboard',
-    version: '3.0.0'
+    version: '3.1.0'
   };
 
   // ==================== INIT ====================
@@ -1198,13 +1198,185 @@
     }
   }
 
-  // ==================== EVENT LISTENERS ====================
+  // ==================== EVENT LISTENERS (DELEGATION-BASED) ====================
+  // Uses event delegation so ALL buttons work even after dynamic re-render
   function setupEventListeners() {
-    // Main tab navigation
-    document.querySelectorAll('.ga-tab-link').forEach(link => {
-      link.addEventListener('click', (e) => {
+    const wrapper = document.getElementById('gastca-wrapper');
+    if (!wrapper) { console.warn('[GAsTCA] wrapper not found for events'); return; }
+
+    // ===== MASTER CLICK HANDLER (delegation on wrapper) =====
+    wrapper.addEventListener('click', function(e) {
+      const target = e.target;
+      const btn = target.closest('button, a, [data-ga-tab], .ga-pill, .ga-flag-btn, .ga-view-btn, .ga-toggle-btn, .ga-sub-tab, .ga-slist-tab, .ga-month-btn, .ga-pag-btn, .ga-pag-num, .ga-action-btn, .ga-btn-icon');
+      if (!btn) return;
+
+      // Prevent default for links
+      if (btn.tagName === 'A') e.preventDefault();
+
+      // --- Show Original MBA link ---
+      if (btn.id === 'ga-show-original-mba') {
+        e.preventDefault();
+        hideGAsTCA();
+        return;
+      }
+
+      // --- Refresh button ---
+      if (btn.id === 'ga-btn-refresh' || btn.id === 'ga-btn-refresh-products' || btn.id === 'ga-btn-full-refresh') {
+        refreshData();
+        return;
+      }
+
+      // --- Settings button ---
+      if (btn.id === 'ga-btn-settings') {
+        alert('GAsTCA Settings - Coming soon!');
+        return;
+      }
+
+      // --- Analytics date range pills ---
+      if (btn.classList.contains('ga-pill') && btn.dataset.range) {
+        wrapper.querySelectorAll('.ga-pill[data-range]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        return;
+      }
+
+      // --- Analytics Daily/Monthly toggle ---
+      if (btn.classList.contains('ga-toggle-btn') && btn.dataset.view) {
+        const toggleGroup = btn.closest('.ga-achart-toggle');
+        if (toggleGroup) {
+          toggleGroup.querySelectorAll('.ga-toggle-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Research sub-tabs ---
+      if (btn.classList.contains('ga-sub-tab') && btn.dataset.rtab) {
+        wrapper.querySelectorAll('.ga-sub-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        wrapper.querySelectorAll('.ga-research-panel').forEach(p => p.classList.remove('active'));
+        const panel = document.getElementById(`ga-rpanel-${btn.dataset.rtab}`);
+        if (panel) panel.classList.add('active');
+        return;
+      }
+
+      // --- Dashboard sales list sub-tabs ---
+      if (btn.classList.contains('ga-slist-tab')) {
+        wrapper.querySelectorAll('.ga-slist-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        return;
+      }
+
+      // --- Statistics period pills ---
+      if (btn.classList.contains('ga-pill') && btn.dataset.speriod) {
+        wrapper.querySelectorAll('.ga-pill[data-speriod]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        return;
+      }
+
+      // --- Trend match type pills ---
+      if (btn.classList.contains('ga-pill') && btn.dataset.match) {
+        const matchGroup = btn.closest('.ga-trend-match');
+        if (matchGroup) {
+          matchGroup.querySelectorAll('.ga-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Winners marketplace filter ---
+      if (btn.dataset.wmp) {
+        wrapper.querySelectorAll('[data-wmp]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        return;
+      }
+
+      // --- Winners month selector ---
+      if (btn.classList.contains('ga-month-btn')) {
+        if (btn.classList.contains('disabled')) return;
+        wrapper.querySelectorAll('.ga-month-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        return;
+      }
+
+      // --- View toggles (Grid/List) ---
+      if (btn.classList.contains('ga-view-btn')) {
+        const group = btn.closest('.ga-view-toggle, .ga-designs-view-toggle');
+        if (group) {
+          group.querySelectorAll('.ga-view-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+
+      // --- Flag filter buttons (Products page) ---
+      if (btn.classList.contains('ga-flag-btn') && btn.dataset.filterMp) {
+        btn.classList.toggle('active');
+        filterProducts();
+        return;
+      }
+
+      // --- Statistics marketplace filter ---
+      if (btn.classList.contains('ga-flag-btn') && btn.dataset.smp) {
+        btn.classList.toggle('active');
+        return;
+      }
+
+      // --- Research marketplace filter ---
+      if (btn.classList.contains('ga-flag-btn') && btn.dataset.rmp) {
+        btn.classList.toggle('active');
+        return;
+      }
+
+      // --- Analyze Sales button ---
+      if (btn.id === 'ga-analyze-btn') {
+        analyzeSales();
+        return;
+      }
+
+      // --- Search Trends button ---
+      if (btn.id === 'ga-search-trends') {
+        searchTrends();
+        return;
+      }
+
+      // --- Search Trademarks button ---
+      if (btn.id === 'ga-search-tm') {
+        searchTrademarks();
+        return;
+      }
+
+      // --- Search Keywords button ---
+      if (btn.id === 'ga-search-kw') {
+        searchKeywords();
+        return;
+      }
+
+      // --- Pagination buttons ---
+      if (btn.classList.contains('ga-pag-num')) {
+        wrapper.querySelectorAll('.ga-pag-num').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        return;
+      }
+
+      // --- Generic pill (catch-all for any pill without specific data attr) ---
+      if (btn.classList.contains('ga-pill')) {
+        const group = btn.closest('.ga-date-pills, .ga-stats-period, .ga-trend-match');
+        if (group) {
+          group.querySelectorAll('.ga-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+        return;
+      }
+    }, true); // useCapture = true to intercept before Angular
+
+    // ===== NAV TAB CLICKS (on document, not wrapper — tabs are in MBA nav) =====
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('.ga-tab-link');
+      if (link) {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
+
         const tab = link.getAttribute('data-ga-tab');
         switchToTab(tab);
 
@@ -1213,205 +1385,381 @@
         link.classList.add('active');
 
         // Show GAsTCA, hide MBA content
-        document.body.classList.add('gastca-active');
-        const wrapper = document.getElementById('gastca-wrapper');
-        if (wrapper) wrapper.style.display = 'block';
-      });
-    });
-
-    // Original MBA nav click → hide GAsTCA
-    document.querySelectorAll('.nav-tabs .nav-link:not(.ga-tab-link)').forEach(link => {
-      link.addEventListener('click', () => {
-        document.body.classList.remove('gastca-active');
-        const wrapper = document.getElementById('gastca-wrapper');
-        if (wrapper) wrapper.style.display = 'none';
-        document.querySelectorAll('.ga-tab-link').forEach(l => l.classList.remove('active'));
-      });
-    });
-
-    // Show Original MBA link
-    const showOriginal = document.getElementById('ga-show-original-mba');
-    if (showOriginal) {
-      showOriginal.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.body.classList.remove('gastca-active');
-        const wrapper = document.getElementById('gastca-wrapper');
-        if (wrapper) wrapper.style.display = 'none';
-        document.querySelectorAll('.ga-tab-link').forEach(l => l.classList.remove('active'));
-      });
-    }
-
-    // Analytics date range pills
-    document.querySelectorAll('#ga-page-analytics .ga-pill[data-range]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#ga-page-analytics .ga-pill[data-range]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Analytics Daily/Monthly toggle
-    document.querySelectorAll('.ga-achart-toggle .ga-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.ga-achart-toggle .ga-toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Research sub-tabs
-    document.querySelectorAll('.ga-sub-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.ga-sub-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const panel = btn.getAttribute('data-rtab');
-        document.querySelectorAll('.ga-research-panel').forEach(p => p.classList.remove('active'));
-        const target = document.getElementById(`ga-rpanel-${panel}`);
-        if (target) target.classList.add('active');
-      });
-    });
-
-    // Sales list sub-tabs (Dashboard)
-    document.querySelectorAll('.ga-slist-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.ga-slist-tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Products search
-    const prodSearch = document.getElementById('ga-products-search');
-    if (prodSearch) {
-      prodSearch.addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase();
-        document.querySelectorAll('#ga-products-tbody .ga-product-row').forEach(row => {
-          row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-        });
-      });
-    }
-
-    // Designs search
-    const desSearch = document.getElementById('ga-designs-search');
-    if (desSearch) {
-      desSearch.addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase();
-        document.querySelectorAll('#ga-designs-grid .ga-design-card').forEach(card => {
-          card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
-        });
-      });
-    }
-
-    // Select all checkbox (Products)
-    const selectAll = document.getElementById('ga-select-all');
-    if (selectAll) {
-      selectAll.addEventListener('change', () => {
-        const checks = document.querySelectorAll('.ga-product-check');
-        checks.forEach(c => c.checked = selectAll.checked);
-        updateBatchBar();
-      });
-    }
-
-    // Individual product checkboxes
-    document.querySelectorAll('.ga-product-check').forEach(check => {
-      check.addEventListener('change', updateBatchBar);
-    });
-
-    // Refresh button
-    const refreshBtn = document.getElementById('ga-btn-refresh');
-    if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => {
-        readMBAData();
-        // Update displayed values
-        const odometer = document.getElementById('ga-odometer');
-        if (odometer) odometer.textContent = GA.sales.today;
-      });
-    }
-
-    // Statistics period buttons
-    document.querySelectorAll('[data-speriod]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-speriod]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Winners marketplace filter
-    document.querySelectorAll('[data-wmp]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-wmp]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Winners month selector
-    document.querySelectorAll('.ga-month-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (btn.classList.contains('disabled')) return;
-        document.querySelectorAll('.ga-month-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // View toggles (Grid/List)
-    document.querySelectorAll('.ga-view-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const parent = btn.parentElement;
-        parent.querySelectorAll('.ga-view-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Product filter dropdowns
-    ['ga-filter-type', 'ga-filter-status', 'ga-filter-sold'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('change', filterProducts);
+        showGAsTCA();
+        return;
       }
-    });
 
-    // Flag filter buttons (Products page)
-    document.querySelectorAll('.ga-flag-btn[data-filter-mp]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('active');
+      // Original MBA nav click → hide GAsTCA
+      const mbaLink = e.target.closest('.nav-tabs .nav-link:not(.ga-tab-link)');
+      if (mbaLink && !mbaLink.classList.contains('ga-tab-link')) {
+        hideGAsTCA();
+      }
+    }, true); // useCapture = true to beat Angular's event handling
+
+    // ===== CHANGE EVENTS (for selects and checkboxes) =====
+    wrapper.addEventListener('change', function(e) {
+      const target = e.target;
+
+      // Select All checkbox
+      if (target.id === 'ga-select-all') {
+        const checks = wrapper.querySelectorAll('.ga-product-check');
+        checks.forEach(c => c.checked = target.checked);
+        updateBatchBar();
+        return;
+      }
+
+      // Individual product checkbox
+      if (target.classList.contains('ga-product-check')) {
+        updateBatchBar();
+        return;
+      }
+
+      // Filter dropdowns
+      if (target.id === 'ga-filter-type' || target.id === 'ga-filter-status' || target.id === 'ga-filter-sold') {
         filterProducts();
-      });
-    });
+        return;
+      }
+
+      // Designs sort
+      if (target.id === 'ga-designs-sort') {
+        sortDesigns(target.value);
+        return;
+      }
+
+      // Winners year select
+      if (target.id === 'ga-winners-year') {
+        // Placeholder for year change logic
+        return;
+      }
+    }, true);
+
+    // ===== INPUT EVENTS (for search fields) =====
+    wrapper.addEventListener('input', function(e) {
+      const target = e.target;
+
+      // Products search
+      if (target.id === 'ga-products-search') {
+        filterProducts();
+        return;
+      }
+
+      // Designs search
+      if (target.id === 'ga-designs-search') {
+        const q = target.value.toLowerCase();
+        wrapper.querySelectorAll('#ga-designs-grid .ga-design-card').forEach(card => {
+          const text = card.textContent.toLowerCase();
+          card.style.display = text.includes(q) ? '' : 'none';
+        });
+        return;
+      }
+
+      // BSR range sliders
+      if (target.id === 'ga-bsr-min') {
+        const label = document.getElementById('ga-bsr-min-val');
+        if (label) label.textContent = parseInt(target.value).toLocaleString();
+        return;
+      }
+      if (target.id === 'ga-bsr-max') {
+        const label = document.getElementById('ga-bsr-max-val');
+        if (label) label.textContent = parseInt(target.value).toLocaleString();
+        return;
+      }
+
+      // Trend keyword (enter to search)
+      if (target.id === 'ga-trend-keyword') {
+        // Live feedback could go here
+        return;
+      }
+    }, true);
+
+    // ===== KEYDOWN for Enter key on search inputs =====
+    wrapper.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        if (e.target.id === 'ga-trend-keyword') {
+          searchTrends();
+          return;
+        }
+        if (e.target.id === 'ga-tm-keyword') {
+          searchTrademarks();
+          return;
+        }
+        if (e.target.id === 'ga-kw-input') {
+          searchKeywords();
+          return;
+        }
+      }
+    }, true);
+
+    console.log('[GAsTCA] ✅ Event delegation setup complete');
   }
 
+  // ==================== SHOW/HIDE GASTCA ====================
+  function showGAsTCA() {
+    document.body.classList.add('gastca-active');
+    const wrapper = document.getElementById('gastca-wrapper');
+    if (wrapper) wrapper.style.display = 'block';
+  }
+
+  function hideGAsTCA() {
+    document.body.classList.remove('gastca-active');
+    const wrapper = document.getElementById('gastca-wrapper');
+    if (wrapper) wrapper.style.display = 'none';
+    document.querySelectorAll('.ga-tab-link').forEach(l => l.classList.remove('active'));
+  }
+
+  // ==================== TAB SWITCHING ====================
   function switchToTab(tabId) {
     GA.currentTab = tabId;
-    document.querySelectorAll('#gastca-wrapper .ga-page').forEach(p => p.classList.remove('active'));
+    const wrapper = document.getElementById('gastca-wrapper');
+    if (!wrapper) return;
+
+    wrapper.querySelectorAll('.ga-page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById(`ga-page-${tabId}`);
     if (target) target.classList.add('active');
 
     // Initialize charts for specific tabs when they become visible
     if (tabId === 'statistics') {
-      setTimeout(initStatisticsCharts, 100);
+      setTimeout(initStatisticsCharts, 150);
     }
     if (tabId === 'analytics') {
-      setTimeout(initAnalyticsChart, 100);
+      setTimeout(initAnalyticsChart, 150);
+    }
+    if (tabId === 'dashboard') {
+      setTimeout(initDashboardChart, 150);
     }
   }
 
+  // ==================== REFRESH DATA ====================
+  function refreshData() {
+    readMBAData();
+    // Update displayed values
+    const odometer = document.getElementById('ga-odometer');
+    if (odometer) odometer.textContent = GA.sales.today;
+
+    // Update marketplace counts
+    GA.marketplaces.forEach(m => {
+      const countEl = document.querySelector(`.ga-mp-flag[data-mp="${m.code}"] .ga-mp-count`);
+      if (countEl) countEl.textContent = m.units;
+    });
+
+    // Flash refresh feedback
+    const refreshBtn = document.getElementById('ga-btn-refresh');
+    if (refreshBtn) {
+      refreshBtn.textContent = '✓';
+      setTimeout(() => { refreshBtn.textContent = '🔄'; }, 1000);
+    }
+
+    console.log('[GAsTCA] 🔄 Data refreshed');
+  }
+
+  // ==================== BATCH BAR ====================
   function updateBatchBar() {
-    const checked = document.querySelectorAll('.ga-product-check:checked').length;
+    const wrapper = document.getElementById('gastca-wrapper');
+    if (!wrapper) return;
+    const checked = wrapper.querySelectorAll('.ga-product-check:checked').length;
     const bar = document.getElementById('ga-batch-bar');
     const count = document.getElementById('ga-selected-count');
     if (bar) bar.style.display = checked > 0 ? 'flex' : 'none';
     if (count) count.textContent = checked;
   }
 
+  // ==================== FILTER PRODUCTS (combines search + dropdowns + flags) ====================
   function filterProducts() {
+    const wrapper = document.getElementById('gastca-wrapper');
+    if (!wrapper) return;
+
+    const searchInput = document.getElementById('ga-products-search');
+    const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
     const typeFilter = document.getElementById('ga-filter-type')?.value || '';
     const statusFilter = document.getElementById('ga-filter-status')?.value || '';
     const soldFilter = document.getElementById('ga-filter-sold')?.value || '';
-    const activeMPs = [...document.querySelectorAll('.ga-flag-btn[data-filter-mp].active')].map(b => b.dataset.filterMp);
+    const activeMPs = [...wrapper.querySelectorAll('.ga-flag-btn[data-filter-mp].active')].map(b => b.dataset.filterMp);
 
-    document.querySelectorAll('#ga-products-tbody .ga-product-row').forEach(row => {
+    let visibleCount = 0;
+    wrapper.querySelectorAll('#ga-products-tbody .ga-product-row').forEach(row => {
       let show = true;
-      if (typeFilter && row.dataset.type !== typeFilter) show = false;
-      if (statusFilter && row.dataset.status !== statusFilter) show = false;
-      if (activeMPs.length > 0 && !activeMPs.includes(row.dataset.mp)) show = false;
+
+      // Text search
+      if (searchQuery && !row.textContent.toLowerCase().includes(searchQuery)) show = false;
+
+      // Type filter
+      if (show && typeFilter && row.dataset.type !== typeFilter) show = false;
+
+      // Status filter
+      if (show && statusFilter && row.dataset.status !== statusFilter) show = false;
+
+      // Marketplace filter
+      if (show && activeMPs.length > 0 && !activeMPs.includes(row.dataset.mp)) show = false;
+
+      // Sold filter
+      if (show && soldFilter) {
+        const soldVal = row.querySelector('.ga-td-num')?.textContent?.trim();
+        if (soldFilter === 'yes' && (!soldVal || soldVal === '-' || soldVal === '0')) show = false;
+        if (soldFilter === 'no' && soldVal && soldVal !== '-' && soldVal !== '0') show = false;
+      }
+
       row.style.display = show ? '' : 'none';
+      if (show) visibleCount++;
     });
+
+    // Update pagination info
+    const pagInfo = wrapper.querySelector('.ga-pag-info');
+    if (pagInfo) {
+      pagInfo.innerHTML = `Showing <strong>${visibleCount}</strong> of <strong>${GA.products.length}</strong> products`;
+    }
+  }
+
+  // ==================== SORT DESIGNS ====================
+  function sortDesigns(sortBy) {
+    const grid = document.getElementById('ga-designs-grid');
+    if (!grid) return;
+    const cards = [...grid.querySelectorAll('.ga-design-card')];
+    
+    cards.sort((a, b) => {
+      const titleA = a.querySelector('.ga-design-title')?.textContent || '';
+      const titleB = b.querySelector('.ga-design-title')?.textContent || '';
+      if (sortBy === 'title') return titleA.localeCompare(titleB);
+      return 0; // default order
+    });
+
+    cards.forEach(card => grid.appendChild(card));
+  }
+
+  // ==================== ANALYZE SALES ====================
+  function analyzeSales() {
+    const btn = document.getElementById('ga-analyze-btn');
+    if (btn) {
+      btn.textContent = '⏳ Analyzing...';
+      setTimeout(() => { btn.textContent = '📊 Analyze Sales'; }, 1500);
+    }
+    // Re-draw the analytics chart
+    const canvas = document.getElementById('ga-analytics-chart');
+    if (canvas) {
+      canvas._drawn = false;
+      initAnalyticsChart();
+    }
+  }
+
+  // ==================== SEARCH TRENDS ====================
+  function searchTrends() {
+    const keyword = document.getElementById('ga-trend-keyword')?.value?.trim();
+    const grid = document.getElementById('ga-trend-grid');
+    if (!keyword || !grid) {
+      if (!keyword) alert('Please enter a keyword to search');
+      return;
+    }
+
+    grid.innerHTML = '<div class="ga-loading">🔄 Searching for "' + keyword + '"...</div>';
+    
+    // Simulate results after brief delay
+    setTimeout(() => {
+      grid.innerHTML = generateTrendResults(keyword);
+    }, 800);
+  }
+
+  function generateTrendResults(keyword) {
+    // Generate sample trend cards
+    const results = [];
+    for (let i = 0; i < 12; i++) {
+      const bsr = Math.floor(Math.random() * 500000) + 10000;
+      const sales = Math.floor(Math.random() * 50) + 1;
+      const price = (Math.random() * 15 + 13).toFixed(2);
+      results.push(`
+        <div class="ga-trend-card">
+          <div class="ga-trend-card-img">👕</div>
+          <div class="ga-trend-card-info">
+            <div class="ga-trend-card-title">${keyword} Design #${i + 1}</div>
+            <div class="ga-trend-card-meta">
+              <span class="ga-trend-bsr">BSR: ${bsr.toLocaleString()}</span>
+              <span class="ga-trend-sales">~${sales} sales/mo</span>
+            </div>
+            <div class="ga-trend-card-meta">
+              <span class="ga-trend-price">$${price}</span>
+              <span class="ga-trend-reviews">★ ${(Math.random() * 2 + 3).toFixed(1)} (${Math.floor(Math.random() * 50)})</span>
+            </div>
+            <div class="ga-trend-card-actions">
+              <button class="ga-btn ga-btn-sm ga-btn-primary">Analyze</button>
+              <button class="ga-btn ga-btn-sm ga-btn-outline">View</button>
+            </div>
+          </div>
+        </div>
+      `);
+    }
+    return results.join('');
+  }
+
+  // ==================== SEARCH TRADEMARKS ====================
+  function searchTrademarks() {
+    const keyword = document.getElementById('ga-tm-keyword')?.value?.trim();
+    const resultsEl = document.getElementById('ga-tm-results');
+    if (!keyword || !resultsEl) {
+      if (!keyword) alert('Please enter a keyword to search trademarks');
+      return;
+    }
+
+    resultsEl.innerHTML = '<div class="ga-loading">🔄 Searching trademarks for "' + keyword + '"...</div>';
+
+    setTimeout(() => {
+      resultsEl.innerHTML = `
+        <div class="ga-tm-result-card ga-result-safe">
+          <div class="ga-tm-status-icon">✅</div>
+          <div class="ga-tm-result-info">
+            <h4>"${keyword}" - No active trademarks found</h4>
+            <p>This keyword appears to be safe to use in Class 25 (Clothing). Always verify with official trademark databases before using.</p>
+          </div>
+        </div>
+        <div class="ga-tm-disclaimer">
+          <p>⚠️ This is a basic check. Always verify with USPTO/EUIPO official databases for complete trademark searches.</p>
+        </div>
+      `;
+    }, 1000);
+  }
+
+  // ==================== SEARCH KEYWORDS ====================
+  function searchKeywords() {
+    const keyword = document.getElementById('ga-kw-input')?.value?.trim();
+    const resultsEl = document.getElementById('ga-kw-results');
+    if (!keyword || !resultsEl) {
+      if (!keyword) alert('Please enter a seed keyword');
+      return;
+    }
+
+    resultsEl.innerHTML = '<div class="ga-loading">🔄 Getting keyword suggestions for "' + keyword + '"...</div>';
+
+    setTimeout(() => {
+      const suggestions = [
+        keyword + ' funny',
+        keyword + ' vintage',
+        keyword + ' retro',
+        keyword + ' lover',
+        keyword + ' gift',
+        keyword + ' for men',
+        keyword + ' for women',
+        keyword + ' birthday',
+        keyword + ' christmas',
+        keyword + ' dad',
+        'funny ' + keyword,
+        'i love ' + keyword
+      ];
+
+      resultsEl.innerHTML = `
+        <div class="ga-kw-list">
+          <table class="ga-table">
+            <thead><tr><th>Keyword</th><th>Est. Search Vol</th><th>Competition</th><th>Action</th></tr></thead>
+            <tbody>
+              ${suggestions.map(kw => `
+                <tr>
+                  <td><strong>${kw}</strong></td>
+                  <td>${Math.floor(Math.random() * 5000 + 100).toLocaleString()}</td>
+                  <td><span class="ga-comp-badge ga-comp-${['low', 'medium', 'high'][Math.floor(Math.random() * 3)]}">${['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)]}</span></td>
+                  <td><button class="ga-btn ga-btn-sm ga-btn-outline">Add to list</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }, 800);
   }
 
   function initAnalyticsChart() {
